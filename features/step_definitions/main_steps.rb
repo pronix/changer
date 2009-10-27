@@ -4,11 +4,10 @@
   visit path_to(page_name)
 end
 
-То /^Я должен увидеть "([^\"]*)"$/ do |arg1|
-  pending
+То /^Я должен увидеть "([^\"]*)"$/ do |text|
+  response.should contain(text)
 end
 
-То /^кнопку "([^\"]*)"$/ do |arg1|
-
-  pending
+То /^ссылку "([^\"]*)"$/ do |text|
+  response.should contain(text)
 end
