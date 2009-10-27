@@ -7,9 +7,22 @@ module NavigationHelpers
   #
   def path_to(page_name)
     case page_name
-    
+    when /root_path/
+      '/'
     when /the home\s?page/
       '/'
+    when /the new claim page/
+      new_claim_path
+
+    when /the new claims page/
+      new_claims_path
+
+    when /the new claim page/
+      new_claim_path
+
+    when /the new claim page/
+      new_claim_path
+
     
     # Add more mappings here.
     # Here is a more fancy example:
