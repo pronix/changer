@@ -1,0 +1,2 @@
+module PathWaysHelper
+end
