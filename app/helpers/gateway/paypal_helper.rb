@@ -1,0 +1,2 @@
+module Gateway::PaypalHelper
+end
