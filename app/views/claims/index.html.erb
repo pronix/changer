@@ -4,7 +4,7 @@
 </div>
 
 <div >
-  <% form_for :claim, :url => "", :id => "new_claim" do |form| -%>
+  <% form_for :claim, :url => claims_path, :id => "new_claim" do |form| -%>
   <div>
     <em>
       Меняем :
@@ -22,3 +22,21 @@
   <%= submit_tag "Продолжить" %>
   <% end -%>
 </div>
+
+
+
+<% content_for :js do -%>
+<script type="text/javascript" charset="utf-8">
+  $(function(){
+    $("#claim_currency_source_id").change(function(){
+        $("#claim_currency_receiver_id").
+         load("<%= path_way_path(:id, :currency => :source, :format => :js) %>".replace("id", $(this).val() ))
+      });
+  
+  $("#claim_currency_receiver_id").change(function(){
+        $("#claim_currency_source_id").
+         load("<%= path_way_path(:id, :currency => :receiver, :format => :js) %>".replace("id", $(this).val() ))
+      });
+  });
+</script>
+<% end -%>
