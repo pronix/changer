@@ -8,14 +8,20 @@ end
   response.should contain(text)
 end
 
-То /^должен увидеть поле ввода валюты для "([^\"]*)"$/ do |arg1|
-  pending
+То /^должен увидеть поле ввода валюты для платежной системы "([^\"]*)"$/ do |currency|
+  case currency
+  when /источник/
+    response.should have_tag("select#claim_currency_source_id")  
+  when /приемник/
+    response.should have_tag("select#claim_currency_receiver_id")
+  end
+  
 end
 
-То /^должен увидеть поле для ввода суммы для обмена$/ do
-  pending
+То /^должен увидеть поле для ввода "([^\"]*)"$/ do |arg1|
+    response.should have_tag("input#claim_summa")
 end
 
-То /^ссылку "([^\"]*)"$/ do |arg1|
-  response.should contain(text)
+То /^кнопку "([^\"]*)"$/ do |arg1|
+  arg1["Продолжить"] && response.should(have_tag("input[type='submit']"))
 end

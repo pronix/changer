@@ -8,7 +8,7 @@ require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
   
-  config.gem "justinfrench-formtastic", :lib => 'formtastic', :source => 'http://gems.github.com'
+  config.gem "formtastic"
   config.gem 'authlogic'
   
   config.time_zone = 'UTC'
