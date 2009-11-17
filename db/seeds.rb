@@ -4,15 +4,18 @@ Currency.destroy_all
 PathWay.destroy_all
 
 PaymentSystem.create([ { 
-                        :name => "Webmoney", 
-                        :description => "Платежная система webmoney"
+                         :controller => "webmoney",
+                         :name => "Webmoney", 
+                         :description => "Платежная система webmoney"
                       }, { 
-                         :name => "Яндекс Деньги",
-                         :description => "Яндекс Деньги"
+                         :controller => "paypal",
+                         :name => "PayPal",
+                         :description => "PayPal"
                       } ] )
 
 webmoney = PaymentSystem.find_by_name "Webmoney"
-yandex_money = PaymentSystem.find_by_name "Яндекс Деньги"
+paypal = PaymentSystem.find_by_name "PayPal"
+
 webmoney.currencies.create([ {
                                :name => "WMZ", :code => "WMZ",
                                :description => "$"
@@ -20,36 +23,68 @@ webmoney.currencies.create([ {
                                :name => "WMR", :code => "WMR",
                                :description => "Руб."
                              } ])
-yandex_money.currencies.create([
-                                {     
-                                  :name => "Яндекс Деньги",
-                                  :code => "YANDEX_MONEY",
-                                  :description => "YA"
-                                }
+paypal.currencies.create([
+                          {     
+                            :name => "PayPal USD", :code => "USD",
+                            :description => "PayPal"
+                          }, {     
+                            :name => "PayPal EUR", :code => "EUR",
+                            :description => "PayPal"
+                          }
                                ])
 
-wmz = Currency.find_by_code "WMZ"
-wmr = Currency.find_by_code "WMR"
-ya = Currency.find_by_code "YANDEX_MONEY"
 
-PathWay.create([{ 
+wmz = webmoney.currencies.find_by_code "WMZ"
+wmr = webmoney.currencies.find_by_code "WMR"
+
+pl_usd = paypal.currencies.find_by_code "USD"
+pl_eur = paypal.currencies.find_by_code "EUR"
+
+PathWay.create([
+                { 
                   :currency_source => wmz,
-                  :currency_receiver => ya,
+                  :currency_receiver => pl_usd,
                   :percent => 1,
-                  :description => "Меняем WMZ на Яндекс Деньги"
+                  :description => "Меняем WMZ на PayPal USD"
                 }, { 
                   :currency_source => wmr,
-                  :currency_receiver => ya,
+                  :currency_receiver => pl_usd,
                   :percent => 1,
-                  :description => "Меняем WMR на Яндекс Деньги"
+                  :description => "Меняем WMR на PayPal USD"
+                } ,
+                { 
+                  :currency_source => wmz,
+                  :currency_receiver => pl_eur,
+                  :percent => 1,
+                  :description => "Меняем WMZ на PayPal EUR"
                 }, { 
-                  :currency_source => ya,
+                  :currency_source => wmr,
+                  :currency_receiver => pl_eur,
+                  :percent => 1,
+                  :description => "Меняем WMR на PayPal EUR"
+                } ,
+                
+                
+                { 
+                  :currency_source => pl_usd,
                   :currency_receiver => wmz,
                   :percent => 1,
-                  :description => "Меняем Яндекс Деньги на WMZ"
+                  :description => "Меняем PayPal USD на WMZ"
                 }, { 
-                  :currency_source => ya,
+                  :currency_source => pl_usd,
                   :currency_receiver => wmr,
                   :percent => 1,
-                  :description => "Меняем Яндекс Деньги на WMR"
-                } ] )
+                  :description => "Меняем PayPal USD на WMR"
+                }, { 
+                  :currency_source => pl_eur,
+                  :currency_receiver => wmz,
+                  :percent => 1,
+                  :description => "Меняем PayPal EUR на WMZ"
+                }, { 
+                  :currency_source => pl_eur,
+                  :currency_receiver => wmr,
+                  :percent => 1,
+                  :description => "Меняем PayPal EUR на WMR"
+                }
+               
+               ] )
