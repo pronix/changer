@@ -2,6 +2,23 @@
 <div id="description">
   Описание сервиса
 </div>
-<div>
-  <%= link_to "Создать заявку",  new_claims_path %>
+
+<div >
+  <% form_for :claim, :url => "", :id => "new_claim" do |form| -%>
+  <div>
+    <em>
+      Меняем :
+      <%= collection_select(:claim, :currency_source_id, Currency.all, :id, :name ) %>
+    </em>
+    <em>
+      на :
+      <%= collection_select(:claim, :currency_receiver_id, Currency.all, :id, :name ) %>
+    </em>
+    <em>
+      Сумма :
+      <%= form.text_field :summa, :size => 12  %>
+    </em>
+  </div>
+  <%= submit_tag "Продолжить" %>
+  <% end -%>
 </div>
