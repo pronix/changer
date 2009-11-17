@@ -11,6 +11,7 @@ Rails::Initializer.run do |config|
   config.gem "formtastic"
   config.gem 'authlogic'
   config.gem 'aasm'
+  config.gem 'yaroslav-russian', :lib => 'russian'  
   
   config.time_zone = 'UTC'
 
