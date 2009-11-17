@@ -34,7 +34,13 @@ class Claim < ActiveRecord::Base
     end
     
   end
-  
+
+  class << self 
+    # TODO потом надо будет добавить проверку на время жизни заявки
+    def find_claim(_id=nil)
+      find_by_id(_id)
+    end
+  end
   aasm_column :state
   aasm_initial_state :new
   
@@ -42,8 +48,45 @@ class Claim < ActiveRecord::Base
   aasm_state :filled     # заявка заполнена
   aasm_state :confirmed  # данные потверждены и соглашение приянто
   aasm_state :pay        # заявка оплачена
+  aasm_state :queue      # заявка в очереди на перечесление 
   aasm_state :complete   # заявка завершена
   aasm_state :cancel     # заявка отменена
   aasm_state :error      # заявка завершена с ошибкой
+
   
+  # заполнили заявку
+  aasm_event :fill do
+    transitions :to => :filled, :from => :new
+  end
+  
+  # потдвердили заявку
+  aasm_event :confirm do
+    transitions :to => :confirmed, :from => :filled
+  end  
+  
+  # заявку оплатили
+  aasm_event :payment do
+    transitions :to => :pay, :from => :confirmed
+  end  
+  
+  # заявка в очереди на перечесление денег
+  aasm_event :to_queue do
+    transitions :to => :queue, :from => :pay
+  end  
+  
+  # заявка выполнена
+  aasm_event :completed do
+    transitions :to => :complete, :from => :queue
+  end  
+  
+  # заявка выполнена
+  aasm_event :canceled do
+    transitions :to => :cancel, :from => [:new, :filled, :confirmed]
+  end  
+  
+  # заявка не выполнена из-за ошибки
+  aasm_event :erroneous  do 
+    transitions :to => :error, :from => [:new, :filled, :confirmed, :pay, :complete, :cancel]
+  end
 end
+

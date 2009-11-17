@@ -3,7 +3,11 @@ class ClaimsController < ApplicationController
   def index
     @claim = Claim.new
   end
-
+  
+  # просмотр статус заявки
+  def show
+  end
+  
   # Создаем новую заявку а обмен
   def create
     @claim = Claim.new params[:claim]

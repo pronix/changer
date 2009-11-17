@@ -5,7 +5,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :path_ways
   
   map.namespace :gateway  do |gateway|
-    gateway.resource :webmoney, :controller => "webmoney"
+    gateway.resource :webmoney, :controller => "webmoney", :collection => { :confirmed => :any }
     gateway.resource :paypal, :controller => "paypal"
   end
   
