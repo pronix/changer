@@ -11,6 +11,8 @@ class ClaimsController < ApplicationController
   # Создаем новую заявку а обмен
   def create
     @claim = Claim.new params[:claim]
+    @claim.request_options = parse_request
+    
     if @claim.save
       flash[:notice] = 'Создана новая заявка'
       session[:claim_id] = @claim.id
@@ -23,4 +25,17 @@ class ClaimsController < ApplicationController
     end
   end
 
+  
+  private
+  # Параметры запроса
+  def parse_request
+    { 
+      :ip => request.remote_ip,
+      :params => request.params,
+      :host => request.host,
+      :format => request.format,
+      :domain => request.domain
+      
+    }
+  end
 end
