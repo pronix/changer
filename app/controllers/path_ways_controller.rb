@@ -1,14 +1,11 @@
 class PathWaysController < ApplicationController
   def show
-    # @currency = PathWay.
-    case params[:currency]
-    when /source/
-      @currency = PathWay.get_currency_for_source(params[:id]).collect{ |x| x.currency_receiver}
-    when /receiver/
-      @currency = PathWay.get_currency_for_receiver(params[:id]).collect{ |x| x.currency_source}
+    unless params[:currency].blank?
+      @currency = PathWay.get_currency_for_source(params[:currency]).collect{ |x| x.currency_receiver}
     else
-      @currency = []
+      @currency = Currency.all 
     end
+
     respond_to do |format|
       format.html
       format.js { render :action => :show, :layout => false }

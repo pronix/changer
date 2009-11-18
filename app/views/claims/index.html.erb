@@ -12,7 +12,7 @@
     </em>
     <em>
       на :
-      <%= collection_select(:claim, :currency_receiver_id, Currency.all, :id, :name ) %>
+      <%= collection_select(:claim, :currency_receiver_id, Currency.all, :id, :name) %>
     </em>
     <em>
       Сумма :
@@ -30,13 +30,9 @@
   $(function(){
     $("#claim_currency_source_id").change(function(){
         $("#claim_currency_receiver_id").
-         load("<%= path_way_path(:id, :currency => :source, :format => :js) %>".replace("id", $(this).val() ))
+         load("<%= path_ways_path(:currency => :id, :format => :js) %>".replace("id", $(this).val() ))
       });
   
-  $("#claim_currency_receiver_id").change(function(){
-        $("#claim_currency_source_id").
-         load("<%= path_way_path(:id, :currency => :receiver, :format => :js) %>".replace("id", $(this).val() ))
-      });
   });
 </script>
 <% end -%>

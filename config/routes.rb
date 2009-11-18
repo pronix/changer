@@ -2,7 +2,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.root :controller => :claims, :action => :index
   map.resource :claims, :only => [:new, :create, :show, :index]
-  map.resources :path_ways
+  map.resource :path_ways
   
   map.namespace :gateway  do |gateway|
     gateway.resource :webmoney, :controller => "webmoney", :collection => { :confirmed => :any }
