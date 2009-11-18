@@ -12,12 +12,14 @@ class Claim < ActiveRecord::Base
   belongs_to :currency_receiver, :class_name => "Currency" 
   
   validates_presence_of :currency_source, :currency_receiver
-  validates_presence_of :summa
+  validates_presence_of :summa, :email
+  validates_format_of :email, :with => /\A[A-Z0-9_\.%\+\-]+@(?:[A-Z0-9\-]+\.)+(?:[A-Z]{2,4}|museum|travel)\z/i 
   validates_numericality_of :summa
   
   validate :valid_currency
   
-  serialize :option_purse, Hash
+  serialize :option_purse, Hash # параметры кошелька пользователя
+  serialize :request_options, Hash # параметры запроса откуда создаеться заявка
   
   def valid_currency
     
