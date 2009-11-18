@@ -14,6 +14,7 @@
   <h3>Куда Вам отправить деньги</h3>
   <% semantic_form_for [:gateway, @claim], :url => gateway_webmoney_path, :method => :put  do |form| %>
   <% form.inputs  do -%>
+  <%= form.input :email %>
   <%= form.input :summa %>
   <li id="claim_option_purse_purse_dest_input" class="numeric required">
     <label for="claim_option_purse_purse_dest">
