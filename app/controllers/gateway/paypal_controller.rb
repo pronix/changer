@@ -73,7 +73,7 @@ class Gateway::PaypalController < ApplicationController
       "country"       => "RU",
       "no_note"       => "1",
       "no_shipping"   => "1",
-      "invoice"       => claim.id,
+      "invoice"       => claim.id+10000,
       "return"        => @gateway.parameters[:return_url]
    
     }    

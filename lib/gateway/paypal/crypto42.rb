@@ -1,7 +1,7 @@
 module Crypto42
   class Button
     def initialize(data)
-      place_cert = [RAILS_ROOT, "gateway", "paypal", "cert"]
+      place_cert = [RAILS_ROOT, "lib", "gateway", "paypal", "cert"]
       
       my_cert_file =     File.join(place_cert.dup << "my-pubcert.pem")
       my_key_file =      File.join(place_cert.dup << "my-prvkey.pem")
