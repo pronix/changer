@@ -18,3 +18,13 @@ Rails::Initializer.run do |config|
   config.i18n.load_path += Dir[File.join(RAILS_ROOT, 'config', 'locales', '**', '*.{rb,yml}')]   
   config.i18n.default_locale = :ru
 end
+
+
+unless RAILS_ENV == 'production'
+  ActiveMerchant::Billing::Base.mode = :test
+  ActiveMerchant::Billing::Base.gateway_mode = :test
+  ActiveMerchant::Billing::Base.integration_mode = :test
+end
+  ActiveMerchant::Billing::PaypalGateway.pem_file =  File.read(File.join(RAILS_ROOT,'lib/gateway/paypal/cert/paypal_cert.pem'))  
+
+

@@ -1,9 +1,9 @@
 <div>
-<% form_for "pay", :url => "url", :method => :post  do -%>
+<% form_for "pay", :url => @claim.payment_system_source.parameters[:url]  do -%>
   <h4>Обмен валюты</h4>
-  
+  <div><%= render :partial => 'gateway/shared/confirmed', :object => @claim %></div>
   <%= hidden_field_tag "cmd", "_s-xclick" %>
-  <%№= hidden_field_tag "encrypted", @encrypted_basic %>
-  <p><%= submit_tag t('paypal.pay') %></p>
+  <%= hidden_field_tag "encrypted", @encrypted_basic %>
+  <p><%= submit_tag "Продолжить" %></p>
   <% end -%>
 </div>
