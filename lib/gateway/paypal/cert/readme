@@ -1,0 +1,32 @@
+
+# Пароль для песочницы (для тестирования)
+# login paralel588@gmail.com
+# password - [bnhjevysqblfkmuj
+
+# Тестовый покупатель для paypal
+# login - parall_1258002741_per@gmail.com
+# password - 258002712
+
+# Тестовый продавец
+# login "parall_1258002853_biz@gmail.com
+# password 258002824
+# cert_id "MJFKHQF4DFXKS"
+
+Для API PAyPal
+API Username:  	parall_1258002853_biz_api1.gmail.com
+API Password: 	1258002859
+Signature: 	AY6W4PuOSkptV7OpZZhqb44OC6yfAQfc1RhO6xXQsrSoKsD3wvAFetbK 
+
+1 - Скачать публичный ключ paypal (в my account -> profile-> more options -> Encrypted Payment Settings) 
+2 - положить скаченный файл в папку paypal
+3 - сделать свой ключ в той же папке (публичный и приватный ключ) 
+    openssl genrsa -out my-prvkey.pem 1024
+    openssl req -new -key my-prvkey.pem -x509 -days 365 -out my-pubcert.pem
+4 - добавить свой публичный ключ в my account -> profile-> more options -> Encrypted Payment Settings
+5 - поменять название ключей в файле lib/crypto42 если при создание были другие имена файлов
+
+6 - включить уведомление в PayPal в my account -> profile-> more options -> Instant Payment Notification 
+    где нужно указать url куда надо посылать о состояние платежа - http://[host]/gateway/paypal/notify
+7 - в config/enviroment.rb поменять PAYPAL_RETURN, заменив host на реальное имя 
+8 - для вывода на заполнит логин, пароль и сигнатуру для API PAYPAL
+
