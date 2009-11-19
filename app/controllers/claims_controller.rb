@@ -16,10 +16,10 @@ class ClaimsController < ApplicationController
     if @claim.save
       flash[:notice] = 'Создана новая заявка'
       session[:claim_id] = @claim.id
-      # Отправляем на заполнение параметров куда надо переводить денежные средства
-      redirect_to url_for(:controller => "gateway/#{@claim.currency_receiver.payment_system.controller.downcase}") 
+      # Отправляем на заполнение параметров куда 
+      # надо переводить денежные средства
+      redirect_to url_for(@claim.filling_action)
     else
-
       flash[:error] = ["<ul>",@claim.errors.full_messages.collect{ |x| "<li>#{x}</li>"}, "</ul>"].join
       render :action => :index
     end
@@ -27,6 +27,7 @@ class ClaimsController < ApplicationController
 
   
   private
+  
   # Параметры запроса
   def parse_request
     { 

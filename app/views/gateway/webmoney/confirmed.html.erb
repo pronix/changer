@@ -1,1 +1,20 @@
-Проверить данные и принять соглашение
+<% semantic_form_for [:gateway, @claim], :url => confirmed_gateway_webmoney_path, :method => :post do |form| %>
+<div class="data_claim">
+  <h3>Данные обмена</h3>
+  <div><%= render :partial => '/gateway/shared/confirmed', :object => @claim %></div>
+  <hr />
+  <div><em>Ваш кошелек:</em><%= @claim.option_purse[:purse_dest] %></div>
+  <hr />
+</div>
+
+<div class="terms">
+  <h3>ТЕКСТ ПОЛЬЗОВАТЕЛЬСКОГО СОГЛАШЕНИЯ</h3>
+</div>
+
+  <% form.inputs  do -%>
+    <%= form.input :agree, :as => :boolean %>
+  <% end -%>
+  <% form.buttons do -%>
+    <%= form.commit_button "Продолжить" %>
+  <% end -%>
+<% end -%>

@@ -1,0 +1,9 @@
+<div>
+<% form_for "pay", :url => "url", :method => :post  do -%>
+  <h4>Обмен валюты</h4>
+  
+  <%= hidden_field_tag "cmd", "_s-xclick" %>
+  <%№= hidden_field_tag "encrypted", @encrypted_basic %>
+  <p><%= submit_tag t('paypal.pay') %></p>
+  <% end -%>
+</div>
