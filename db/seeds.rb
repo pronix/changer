@@ -1,4 +1,4 @@
-
+Claim.destroy_all
 PaymentSystem.destroy_all
 Currency.destroy_all
 PathWay.destroy_all
@@ -6,6 +6,13 @@ PathWay.destroy_all
 PaymentSystem.create([ { 
                          :controller => "webmoney",
                          :name => "Webmoney", 
+                         :parameters =>
+                         {
+                           :secret=>"[bnhjevysqblfkmuj",
+                           :payee_purse=>"R324054665688",
+                           :wmid => 329080303191,
+                           :url => "https://merchant.webmoney.ru/lmi/payment.asp"
+                         },
                          :description => "Платежная система webmoney"
                       }, { 
                          :controller => "paypal",
@@ -30,8 +37,7 @@ paypal.currencies.create([
                           }, {     
                             :name => "PayPal EUR", :code => "EUR",
                             :description => "PayPal"
-                          }
-                               ])
+                          } ])
 
 
 wmz = webmoney.currencies.find_by_code "WMZ"
@@ -44,23 +50,31 @@ PathWay.create([
                 { 
                   :currency_source => wmz,
                   :currency_receiver => pl_usd,
-                  :percent => 1,
+                  :rate => 1,
+                  :fee => 0.95,
+                  :fee_payment_system => 0.8,
                   :description => "Меняем WMZ на PayPal USD"
                 }, { 
                   :currency_source => wmr,
                   :currency_receiver => pl_usd,
-                  :percent => 1,
+                  :rate => 0.0357,
+                  :fee => 0.95,
+                  :fee_payment_system => 0.8,
                   :description => "Меняем WMR на PayPal USD"
                 } ,
                 { 
                   :currency_source => wmz,
                   :currency_receiver => pl_eur,
-                  :percent => 1,
+                  :rate => 1.535,
+                  :fee => 0.95,              
+                  :fee_payment_system => 0.8,                  
                   :description => "Меняем WMZ на PayPal EUR"
                 }, { 
                   :currency_source => wmr,
                   :currency_receiver => pl_eur,
-                  :percent => 1,
+                  :rate => 0.232,
+                  :fee => 0.95,   
+                  :fee_payment_system => 0.8,                  
                   :description => "Меняем WMR на PayPal EUR"
                 } ,
                 
@@ -68,23 +82,29 @@ PathWay.create([
                 { 
                   :currency_source => pl_usd,
                   :currency_receiver => wmz,
-                  :percent => 1,
+                  :rate => 1,
+                  :fee => 0.95,
+                  :fee_payment_system => 0.8,                  
                   :description => "Меняем PayPal USD на WMZ"
                 }, { 
                   :currency_source => pl_usd,
-                  :currency_receiver => wmr,
-                  :percent => 1,
+                  :currency_receiver => wmr, 
+                  :rate => 28.0,
+                  :fee => 0.95,
+                  :fee_payment_system => 0.8,                  
                   :description => "Меняем PayPal USD на WMR"
                 }, { 
                   :currency_source => pl_eur,
                   :currency_receiver => wmz,
-                  :percent => 1,
+                  :rate => 0.651,
+                  :fee => 0.95,
+                  :fee_payment_system => 0.8,                  
                   :description => "Меняем PayPal EUR на WMZ"
                 }, { 
                   :currency_source => pl_eur,
                   :currency_receiver => wmr,
-                  :percent => 1,
+                  :rate => 43.0,
+                  :fee => 0.95,
+                  :fee_payment_system => 0.8,                  
                   :description => "Меняем PayPal EUR на WMR"
-                }
-               
-               ] )
+                }] )
