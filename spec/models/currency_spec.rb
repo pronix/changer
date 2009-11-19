@@ -10,7 +10,5 @@ describe Currency do
     }
   end
 
-  it "should create a new instance given valid attributes" do
-    Currency.create!(@valid_attributes)
-  end
+
 end
