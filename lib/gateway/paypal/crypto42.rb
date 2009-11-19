@@ -3,9 +3,9 @@ module Crypto42
     def initialize(data)
       place_cert = [RAILS_ROOT, "gateway", "paypal", "cert"]
       
-      my_cert_file = File.join(place_cert << "my-pubcert.pem")
-      my_key_file =  File.join(place_cert << "my-prvkey.pem")
-      paypal_cert_file = File.join( place_cert << "paypal_cert.pem")
+      my_cert_file =     File.join(place_cert.dup << "my-pubcert.pem")
+      my_key_file =      File.join(place_cert.dup << "my-prvkey.pem")
+      paypal_cert_file = File.join(place_cert.dup << "paypal_cert.pem")
 
       IO.popen("/usr/bin/openssl smime -sign -signer #{my_cert_file} -inkey #{my_key_file} -outform der -nodetach -binary | /usr/bin/openssl smime -encrypt -des3 -binary -outform pem #{paypal_cert_file}", 'r+') do |pipe|
         data.each { |x,y| pipe << "#{x}=#{y}\n" }
