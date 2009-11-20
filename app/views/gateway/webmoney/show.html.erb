@@ -15,7 +15,8 @@
       Ваш кошелек <abbr title="required">*</abbr>
     </label>
     <%= text_field_tag "claim[option_purse[purse_dest]]"  %>
-    <%= content_tag(:p, Webmoney.errors[:purse_dest], :class => "inline-errors") unless Webmoney.errors[:purse_dest].blank?%>
+    <%= content_tag(:p, @valid_webmoney.errors[:purse_dest],
+        :class => "inline-errors") if @valid_webmoney && !@valid_webmoney.errors[:purse_dest].blank?%>
   </li>
   <%= form.input :comment, :input_html => {:rows => 5 }  %>
   <% end -%>

@@ -1,5 +1,8 @@
 class Gateway::WebmoneyController < ApplicationController
+  require "gateway/webmoney/webmoney"
   before_filter :fetch_claim  
+
+  # Заполнение данных для заявки
   
   # выводим форму чтоб пользователь заполнил сумму и кошелек
   def show
@@ -8,9 +11,9 @@ class Gateway::WebmoneyController < ApplicationController
   # Сохраняем данные по заявке
   # и перенаправляем на потверждение данных
   def update
-
     @claim.attributes = params[:claim]
-    if @claim.valid? && Webmoney.valid_params(@claim.option_purse)
+    @valid_webmoney = LibGateway::Webmoney.new 
+    if @claim.valid? && @valid_webmoney.valid_params(@claim.option_purse)
       @claim.fill!
       redirect_to confirmed_gateway_webmoney_path 
     else
@@ -33,6 +36,8 @@ class Gateway::WebmoneyController < ApplicationController
     end
   end
   
+  
+  # Оплата заявки через webmoney
   
   private
   
