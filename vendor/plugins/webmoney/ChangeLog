@@ -1,0 +1,72 @@
+ChangeLog
+
+Sat Oct 03 2009 16:18:00 + 0400
+----------------------------
+  V 0.0.4.8
+  * Refactor class Passport
+
+Wed Sep 30 2009 16:09:00 + 0400
+----------------------------
+  V 0.0.4.7
+  * Class Webmoney refactor to module
+  * Add find_wm (X8) interface
+  * Add logger call when send message via simple queue
+
+Wed Aug 12 2009 20:31:00 + 0400
+----------------------------
+  V 0.0.4.6
+  * Feature: path to certs directory
+  * New CA certificates in bundle
+
+Thu Jun 11 2009 13:05:00 + 0400
+----------------------------
+  V 0.0.4.5
+  * Fix unexistent WMID passport request error
+  * Fix zero microsecounds error in reqn()
+
+Sun Mar 15 2009 14:55:18 +0400
+----------------------------
+  V 0.0.4.4
+  * Fix bug in send_message (reqn related)
+  * Refactor for more extendable
+
+Thu Jan 22 2009 14:00:00 +0400
+----------------------------
+  V 0.0.4.3
+  * Move Webmoney#sign to public methods
+  * Add gemspec
+  * Add more rdoc
+
+Tue Oct 14 2008 18:46:50 +0400
+----------------------------
+  V 0.0.4.2
+  * Remove ActiveSuport stupid dependency
+  * Remove Time.from_ms meaningless method
+  * Rename config file to ~/.wm/config.yml
+
+Tue Aug 19 11:31:53 2008 +0400
+----------------------------
+  V 0.0.4.1
+  * Fix error in parsing ms-data without ending zeros
+
+Wed Feb 27 19:09:00 MSK 2008
+----------------------------
+  V 0.0.4
+  * Redesign interfaces, BIG changes
+  * Add Messenger class for processing messages queue in new thread
+  * Add ResponseError on incorrect http response (404, 501, etc)
+
+Wed Oct 24 17:57:00 MSK 2007
+----------------------------
+  V 0.0.3 
+  * Add send_message interface
+  * Add specific Exceptions
+  * Add parse_retval for response
+  
+Tue Aug 7 14:34:00 MSK 2007
+----------------------------
+  V 0.0.2
+  * Bug fixes...
+
+  V 0.0.1
+  * Initial release
