@@ -5,9 +5,12 @@ ActionController::Routing::Routes.draw do |map|
   map.resource :path_ways
   
   map.namespace :gateway  do |gateway|
-    gateway.resource :webmoney, :controller => "webmoney", :collection => { :confirmed => :any  }
-    
-    gateway.resource :paypal, :controller => "paypal", :collection => { :pay => :any  }
+    { 
+      :webmoney => { }, :paypal =>   { }
+    }.each do |payment, opt|
+      gateway.resource payment, :controller => payment,
+      :collection => { :confirmed => :any , :pay => :any }.merge!(opt)
+    end
   end
   
   map.connect ':controller/:action/:id'
