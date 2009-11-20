@@ -1,14 +1,42 @@
 class Gateway::PaypalController < ApplicationController
   include ActiveMerchant::Billing::Integrations
   require 'gateway/paypal/crypto42'
+  require "gateway/paypal/paypal"
   require 'money'
   
   skip_before_filter :verify_authenticity_token, :only => [:done, :notify]  
   before_filter :fetch_claim  
-  
-  def show
-  end
 
+  # Заполнение данных по заявки
+  def show
+    
+  end
+  
+  # Проверка данных по заявке и сохранение
+  def update
+    @claim.attributes = params[:claim]
+    @valid_paypal = LibGateway::Paypal.new 
+    if @claim.valid? && valid_paypal.valid_params(@claim.option_purse)
+      @claim.fill!
+      redirect_to confirmed_gateway_paypal_path 
+    else
+      flash[:error] = "Введенные данные не правельные"
+      render :action => :show
+    end    
+  end
+  
+  # Потдверждение потзователем данных
+  def confirmed
+    if !request.put?
+      # выводим форму потдверждения
+      render :action => :confirmed
+    elsif params[:claim][:agree] && params[:claim][:agree].to_i == 1
+      # пользователь потдвердил данные и согласился с соглашением
+      # сохраняем заявку и перенаправляем пользователя на оплату через Плат. систему источник
+      @claim.confirm!
+      redirect_to url_for(@claim.pay_action)
+    end    
+  end
   
   
   # ========================= Оплата по системе PayPal ===========

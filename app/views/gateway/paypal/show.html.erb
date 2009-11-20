@@ -2,28 +2,27 @@
 
   <div>
     <h3>Обмен</h3>
-    <em> Меняем : <strong><%= @claim.currency_source.name %></strong></em>
-    <em> на : <strong><%= @claim.currency_receiver.name %></strong></em>
-    <div>
-    <em> курс : <strong>1 : 1</strong></em>
-    <em> коммисия : <strong>0.3%</strong></em>
-    </div>
-      
+    <%= render :partial => 'gateway/shared/info', :object => @claim %>      
   </div>
+  
   <h3>Куда Вам отправить деньги</h3>
-    <% semantic_form_for [:gateway, @claim], :url => gateway_webmoney_path, :method => :put  do |form| %>
+  <% semantic_form_for [:gateway, @claim], :url => gateway_paypal_path, :method => :put  do |form| %>
   <% form.inputs  do -%>
+  <%= form.input :email %>
   <%= form.input :summa %>
   <li id="claim_option_purse_purse_dest_input" class="numeric required">
     <label for="claim_option_purse_purse_dest">
-      Ваш кошелек <abbr title="required">*</abbr>
+      Ваш аккаунт в PayPal <abbr title="required">*</abbr>
     </label>
     <%= text_field_tag "claim[option_purse[purse_dest]]"  %>
+    <%= content_tag(:p, @valid_paypal.errors[:purse_dest],
+        :class => "inline-errors") if @valid_paypal && !@valid_paypal.errors[:purse_dest].blank?%>
   </li>
+  
   <%= form.input :comment, :input_html => {:rows => 5 }  %>
   <% end -%>
   <% form.buttons do -%>
   <%= form.commit_button  %>
   <% end -%>
   <% end %>
-</div>    
+</div>
