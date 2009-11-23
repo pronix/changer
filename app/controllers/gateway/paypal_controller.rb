@@ -5,7 +5,7 @@ class Gateway::PaypalController < ApplicationController
   require 'money'
   
   skip_before_filter :verify_authenticity_token, :only => [:done, :notify]  
-  before_filter :fetch_claim  
+  before_filter :fetch_claim, :only => [:show, :update, :confirmed, :pay ]  
 
   # Заполнение данных по заявки
   def show
@@ -52,22 +52,21 @@ class Gateway::PaypalController < ApplicationController
     
     if @notify_paypal.acknowledge
       begin
-        @claim =  Claim.confirmed.find @notify_paypal.invoice
-        # @transaction.payment_params = params
+        @claim =  Claim.confirmed.find_by_md5 @notify_paypal.invoice
+        @claim.payment_options = params
 
         if @notify_paypal.complete?
           # Платеж успешно завершен
-          # @transaction.fee = params[:payment_fee]
-          # @transaction.comment =  @transaction.comment + ", "+t('paypal.flash.success_payment')
-          # @transaction.complete!
+          @claim.fee = params[:payment_fee]
+          @claim.payment!
         else
           # платеж не завершен
-          # @transaction.comment =  @transaction.comment +", "+ t('paypal.flash.fail_payment')
-          # @transaction.failure!
+          @claim.canceled!
         end
         
       rescue => e
         # обработка ошибки
+        @claim.canceled!
       ensure
         # что длеаеться в любом случае
       end
@@ -78,6 +77,7 @@ class Gateway::PaypalController < ApplicationController
   
   # PayPal сюда возвращает пользователя после оплаты
   def done
+    redirect_to claims_path
   end
   
   private
@@ -87,7 +87,7 @@ class Gateway::PaypalController < ApplicationController
   end
   
   def fetch_decrypted(claim)
-    @gateway = claim.payment_system_source
+    @gateway = claim.payment_system_source 
 
 
     decrypted = {
@@ -101,7 +101,7 @@ class Gateway::PaypalController < ApplicationController
       "country"       => "RU",
       "no_note"       => "1",
       "no_shipping"   => "1",
-      "invoice"       => claim.id+10000,
+      "invoice"       => claim.md5,
       "return"        => @gateway.parameters[:return_url]
    
     }    

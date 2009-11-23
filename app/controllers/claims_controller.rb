@@ -6,6 +6,7 @@ class ClaimsController < ApplicationController
   
   # просмотр статус заявки
   def show
+    @claim = Claim.find_claim session[:claim_id] 
   end
   
   # Создаем новую заявку а обмен

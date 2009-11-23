@@ -16,7 +16,7 @@ class Claim < ActiveRecord::Base
   
   serialize :option_purse, Hash # параметры кошелька пользователя
   serialize :request_options, Hash # параметры запроса откуда создаеться заявка
-  
+  serialize :payment_options, Hash # параметры которые вернулись от плат. системы при оплате
   
   validates_presence_of :currency_source, :currency_receiver
   validates_presence_of :path_way, :message => "по выбранной схеме не поддерживаеться"
@@ -32,7 +32,13 @@ class Claim < ActiveRecord::Base
   def set_path_way
     self.path_way = PathWay.find_path(self.currency_source, self.currency_receiver)
   end
-  
+
+
+  after_create :set_md5
+  def set_md5
+    self.md5 = Digest::MD5.hexdigest([self, Time.now.to_i].join)    
+    save
+  end
   
 # Платежная система (источник)
   def payment_system_source
@@ -68,9 +74,9 @@ class Claim < ActiveRecord::Base
   aasm_state :filled,    :enter => :exchange # заявка заполнена
   aasm_state :confirmed  # данные потверждены и соглашение приянто
   
-  aasm_state :pay        # заявка оплачена
+  aasm_state :pay,       :enter => :to_queue  # заявка оплачена
   
-  aasm_state :queue      # заявка в очереди на перечесление 
+  # aasm_state :queue      # заявка в очереди на перечесление 
   aasm_state :complete   # заявка завершена
   
   aasm_state :cancel     # заявка отменена
@@ -92,14 +98,14 @@ class Claim < ActiveRecord::Base
     transitions :to => :pay, :from => :confirmed
   end  
   
-  # заявка в очереди на перечесление денег
-  aasm_event :to_queue do
-    transitions :to => :queue, :from => :pay
-  end  
+  # # заявка в очереди на перечесление денег
+  # aasm_event :to_queue do
+  #   transitions :to => :queue, :from => :pay
+  # end  
   
   # заявка выполнена
   aasm_event :completed do
-    transitions :to => :complete, :from => :queue
+    transitions :to => :complete, :from => :pay
   end  
   
   # заявка выполнена
@@ -126,6 +132,16 @@ class Claim < ActiveRecord::Base
     self.service_fee = (self.summa / 100.0)* self.path_way.fee.to_f
     self.receivable_source = self.summa - (self.fee + self.service_fee)
     self.receivable_receive = self.receivable_source * self.path_way.rate
+  end
+  
+  # Помещаем заявку в очередь на оплату
+  def to_queue
+    self.send_later(:transfert)
+  end
+  
+  # Выполняем перевод денего в новую платежныю систему пользователя
+  def transfert
+    
   end
 end
 

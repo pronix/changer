@@ -1,0 +1,9 @@
+Просмотр заявки и ее статус
+<div>
+  <% @claim.attributes.each do |k,v| -%>
+  <div>
+    <em><%= k %>:</em><%= v %>
+  </div>
+  <% end -%>
+
+</div>

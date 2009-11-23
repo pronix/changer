@@ -24,7 +24,7 @@ PaymentSystem.create([ {
                            :business => "parall_1258002853_biz@gmail.com", # аккаунт сервиса - куда переводить денег
                            :url => (ENV['RAILS_ENV'] == "production" ?
                                     "https://www.paypal.com/uk/cgi-bin/webscr" : "https://www.sandbox.paypal.com/uk/cgi-bin/webscr"),
-                           :return_url => "http://94.24.189.70:3000/gateway/paypal/done",
+                           :return_url => "http://94.24.178.149:3000/gateway/paypal/done",
                            :login => "parall_1258002853_biz_api1.gmail.com", # логин для paypal api
                            :password => 1258002859,# пароль для paypal api
                            :signature => 'AY6W4PuOSkptV7OpZZhqb44OC6yfAQfc1RhO6xXQsrSoKsD3wvAFetbK'# сигнатура для paypal api
