@@ -12,7 +12,7 @@ module LibGateway
       # Проверяем чтоб кошелек был валидны
       @errors = { }
       @errors[:purse_dest] = "Неверный формат кошелька" unless !options["purse_dest"].blank? &&
-        options["purse_dest"] =~ /^[R|Z][0-9]{12}/
+        options["purse_dest"] =~ /^[R|Z]|E|U|D[0-9]{12}/
       @errors.blank?
     end
   end
