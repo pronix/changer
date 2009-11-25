@@ -16,7 +16,7 @@ ActionController::Routing::Routes.draw do |map|
   end
   
   map.namespace :admin do |admin| 
-    admin.resources :payment_systems
+    admin.resources :payment_systems, :only => [:new, :create, :edit, :update, :index]
   end  
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
