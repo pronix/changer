@@ -34,4 +34,5 @@ class Admin::PathWaysController < Admin::MasterController
 
 =end
 
+
 end

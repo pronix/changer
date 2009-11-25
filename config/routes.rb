@@ -15,6 +15,9 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
   
+  map.namespace :admin do |admin| 
+    admin.resources :payment_systems
+  end  
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
 end

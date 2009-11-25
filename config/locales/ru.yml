@@ -2,8 +2,29 @@ ru:
   activerecord:
     models:
       claim: Заявка на обмен
+      path_way: Способ обмена
+      currency: Валюта
+      payment_system: Платежные системы
     attributes: 
       claim:
         path_way: Способ обмена
         summa: Сумма
         agree: Все понимаю и согласен
+      path_way:
+        currency_source: Что меняем
+        currency_receiver: На что меняем 
+        currency_source_id: Что меняем
+        currency_receiver_id: На что меняем
+        rate: Курс обмена
+        fee: Комиссия нашего сервиса
+        fee_payment_system: Комиссия источника
+      currency:
+        name: Наименование
+        code: Код
+        payment_system: Платежная система
+        description: Описание  
+      payment_system: 
+        name: Наименование
+        controller: Контроллер обработки 
+        description: Описание 
+        parameters: Параметры

@@ -17,15 +17,15 @@ Currency:
     list: name, code, payment_system
     form: name, code, description, payment_system
   order_by: 
-  relationships: path_ways, payment_system
+  relationships: payment_system
   filters: 
   search: name
   application: changer
 
 PathWay:
   fields:
-    list: percent, rate, fee, fee_payment_system, currency_receiver, currency_source
-    form: percent, description, rate, fee, fee_payment_system, currency_receiver, currency_source
+    list: currency_source, currency_receiver, rate, fee, fee_payment_system
+    form: currency_source, currency_receiver, rate, fee, fee_payment_system, description
   order_by: 
   relationships: currency_receiver, currency_source
   filters: 

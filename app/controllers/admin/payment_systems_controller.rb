@@ -33,5 +33,23 @@ class Admin::PaymentSystemsController < Admin::MasterController
   end
 
 =end
+  def new
+    @payment_system = PaymentSystem.new
+    render :action => :edit
+  end
+  
+  def edit
+    @payment_system = PaymentSystem.find params[:id]
+  end
+  
+  def update
+    @payment_system = PaymentSystem.find params[:id]
+    if @payment_system.update_attributes params[:payment_system]
+      flash[:notice] = 'Платежная система успешно обновлена'
+  else
+      flash[:error] = 'Платежная система не обновлена'
+  end
+    redirect_to admin_payment_systems_path
+  end
 
 end
