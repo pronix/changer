@@ -9,14 +9,14 @@ class Gateway::PaypalController < ApplicationController
 
   # Заполнение данных по заявки
   def show
-    
+    @claim.edit! if @claim.filled?    
   end
   
   # Проверка данных по заявке и сохранение
   def update
     @claim.attributes = params[:claim]
     @valid_paypal = LibGateway::Paypal.new 
-    if @claim.valid? && valid_paypal.valid_params(@claim.option_purse)
+    if @claim.valid? && @valid_paypal.valid_params(@claim.option_purse)
       @claim.fill!
       redirect_to confirmed_gateway_paypal_path 
     else
@@ -25,16 +25,23 @@ class Gateway::PaypalController < ApplicationController
     end    
   end
   
-  # Потдверждение потзователем данных
+  # Потдверждение пользователем данных
   def confirmed
-    if !request.put?
+    if !request.put? 
       # выводим форму потдверждения
       render :action => :confirmed
-    elsif params[:claim][:agree] && params[:claim][:agree].to_i == 1
-      # пользователь потдвердил данные и согласился с соглашением
-      # сохраняем заявку и перенаправляем пользователя на оплату через Плат. систему источник
-      @claim.confirm!
-      redirect_to url_for(@claim.pay_action)
+      
+    else
+      @claim.agree = params[:claim][:agree]
+      if @claim.valid?
+        # пользователь потдвердил данные и согласился с соглашением
+        # сохраняем заявку и перенаправляем пользователя на оплату через Плат. систему источник
+        @claim.confirm!
+        redirect_to url_for(@claim.pay_action)  
+      else
+        render :action => :confirmed        
+      end
+      
     end    
   end
   

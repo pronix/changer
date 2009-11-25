@@ -5,6 +5,9 @@
 Дальше потдверждает данные и соглашаеться с условием
 Потом переводит денег на счет сервиса, если успешно сервис переводит на новый счет пользователя  денег в новой валюте
 =end
+require "gateway/paypal/paypal"
+require "gateway/webmoney/webmoney"
+
 class Claim < ActiveRecord::Base
   include AASM
   attr_protected :receivable, :fee, :service_fee
@@ -13,10 +16,17 @@ class Claim < ActiveRecord::Base
   belongs_to :currency_source, :class_name => "Currency"
   belongs_to :currency_receiver, :class_name => "Currency" 
   belongs_to :path_way, :class_name => "PathWay"  
+  has_many :events do 
+    # Новая заявка
+    def new_claim
+      
+    end
+  end
   
   serialize :option_purse, Hash # параметры кошелька пользователя
   serialize :request_options, Hash # параметры запроса откуда создаеться заявка
   serialize :payment_options, Hash # параметры которые вернулись от плат. системы при оплате
+  serialize :response_transfert, Hash # параметры которые вернулись от плат. системы при переводе денег
   
   validates_presence_of :currency_source, :currency_receiver
   validates_presence_of :path_way, :message => "по выбранной схеме не поддерживаеться"
@@ -27,7 +37,8 @@ class Claim < ActiveRecord::Base
   :if => lambda{ |t| !t.new_record? }
   validates_numericality_of :summa
   
-    
+  validates_acceptance_of :agree, :if => lambda{ |t| t.filled? }
+  
   before_validation_on_create :set_path_way
   def set_path_way
     self.path_way = PathWay.find_path(self.currency_source, self.currency_receiver)
@@ -70,22 +81,25 @@ class Claim < ActiveRecord::Base
   aasm_column :state
   aasm_initial_state :new
   
-  aasm_state :new        # новая заявка
+  aasm_state :new,       :enter => :new_claim # новая заявка
   aasm_state :filled,    :enter => :exchange # заявка заполнена
-  aasm_state :confirmed  # данные потверждены и соглашение приянто
+  aasm_state :confirmed,  :enter => :confirmed_claim # данные потверждены и соглашение приянто
   
   aasm_state :pay,       :enter => :to_queue  # заявка оплачена
+  aasm_state :complete,  :enter => :complete_claim # заявка завершена
   
-  # aasm_state :queue      # заявка в очереди на перечесление 
-  aasm_state :complete   # заявка завершена
-  
-  aasm_state :cancel     # заявка отменена
-  aasm_state :error      # заявка завершена с ошибкой
+  aasm_state :cancel,    :enter => :cancel_claim  # заявка отменена
+  aasm_state :error,     :enter => :error_claim # заявка завершена с ошибкой
 
   
   # заполнили заявку
   aasm_event :fill do
     transitions :to => :filled, :from => [:new, :confirmed]
+  end
+    
+  # заполнили заявку
+  aasm_event :edit do
+    transitions :to => :new, :from => :filled
   end
   
   # потдвердили заявку
@@ -141,7 +155,39 @@ class Claim < ActiveRecord::Base
   
   # Выполняем перевод денего в новую платежныю систему пользователя
   def transfert
-    
+    gateway = "lib_gateway/#{self.payment_system_receiver.controller}".camelize.constantize.new
+    if gateway.transfert(self)
+      self.completed!      
+    else
+      self.erroneous!      
+    end  
   end
+  
+  
+  # Создание сообщение для логирования по заявке и отправка сообщения на почту 
+  # 
+  
+  # Новая заявка
+  def new_claim
+  end
+  
+  # Заявка заполнена
+  def confirmed_claim
+  end
+  
+  # Заявка выполнена
+  def complete_claim
+  end
+  
+  # Заявка отменена
+  def cancel_claim
+  end
+  
+  # Заявка завершилась с ошибкой
+  def error_claim
+    Notifier.deliver_error_claim(self)
+    # Notifier.send("deliver_error_claim",self)
+  end
+  
 end
 

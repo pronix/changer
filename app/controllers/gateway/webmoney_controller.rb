@@ -11,6 +11,7 @@ class Gateway::WebmoneyController < ApplicationController
   
   # выводим форму чтоб пользователь заполнил сумму и кошелек
   def show
+    @claim.edit! if @claim.filled?    
   end
   
   # Сохраняем данные по заявке
@@ -33,11 +34,16 @@ class Gateway::WebmoneyController < ApplicationController
     if !request.put?
       # выводим форму потдверждения
       render :action => :confirmed
-    elsif params[:claim][:agree] && params[:claim][:agree].to_i == 1
-      # пользователь потдвердил данные и согласился с соглашением
-      # сохраняем заявку и перенаправляем пользователя на оплату через Плат. систему источник
-      @claim.confirm!
-      redirect_to url_for(@claim.pay_action)
+    else
+      @claim.agree = params[:claim][:agree]
+      if @claim.valid?
+        # пользователь потдвердил данные и согласился с соглашением
+        # сохраняем заявку и перенаправляем пользователя на оплату через Плат. систему источник        
+        @claim.confirm!
+        redirect_to url_for(@claim.pay_action)
+      else
+        render :action => :confirmed
+      end
     end
   end
   

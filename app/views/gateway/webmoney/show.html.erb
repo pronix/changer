@@ -14,7 +14,8 @@
     <label for="claim_option_purse_purse_dest">
       Ваш кошелек <abbr title="required">*</abbr>
     </label>
-    <%= text_field_tag "claim[option_purse[purse_dest]]"  %>
+    
+    <%= text_field_tag "claim[option_purse[purse_dest]]",(@claim.option_purse[:purse_dest] unless @claim.option_purse.blank?)  %>
     <%= content_tag(:p, @valid_webmoney.errors[:purse_dest],
         :class => "inline-errors") if @valid_webmoney && !@valid_webmoney.errors[:purse_dest].blank?%>
   </li>

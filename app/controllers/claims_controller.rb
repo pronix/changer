@@ -7,6 +7,10 @@ class ClaimsController < ApplicationController
   # просмотр статус заявки
   def show
     @claim = Claim.find_claim session[:claim_id] 
+    respond_to do |format|
+      format.html { }
+      format.js { render :action => :show, :layout => false }
+    end
   end
   
   # Создаем новую заявку а обмен
