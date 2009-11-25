@@ -12,27 +12,58 @@ class Claim < ActiveRecord::Base
   include AASM
   attr_protected :receivable, :fee, :service_fee
   attr_accessor :agree  
-  
   belongs_to :currency_source, :class_name => "Currency"
   belongs_to :currency_receiver, :class_name => "Currency" 
   belongs_to :path_way, :class_name => "PathWay"  
-  has_many :events do 
+  has_many :events, :dependent => :delete_all do 
     # Новая заявка
-    def new_claim
-      
+    def new_claim 
+      build({ 
+              :message => "Создана новая заявка ##{proxy_owner.id} : #{proxy_owner.md5}",
+              :parameters => proxy_owner.request_options
+            })
     end
+    
+    def confirmed_claim
+      build({ 
+              :message => "Заявка потверждена и отправлена на оплату ##{proxy_owner.id} : #{proxy_owner.md5}"
+            })
+    end
+
+    def complete_claim
+      build({ :message => "Заявка завершена ##{proxy_owner.id} : #{proxy_owner.md5}", 
+              :parameters => proxy_owner.response_transfert
+            })
+    end
+    
+    def cancel_claim
+      build({ 
+              :message => "Заявка отменена ##{proxy_owner.id} : #{proxy_owner.md5}",
+              :parameters => proxy_owner.errors_claim
+            })
+    end
+  
+    def error_claim
+      build({ 
+              :message => "Заявка завершена с ошибкой ##{proxy_owner.id} : #{proxy_owner.md5}",
+              :parameters => proxy_owner.errors_claim
+            })
+    end
+    
   end
   
   serialize :option_purse, Hash # параметры кошелька пользователя
   serialize :request_options, Hash # параметры запроса откуда создаеться заявка
   serialize :payment_options, Hash # параметры которые вернулись от плат. системы при оплате
   serialize :response_transfert, Hash # параметры которые вернулись от плат. системы при переводе денег
+  serialize :errors_claim, Hash # ошибки возникшие по заявке
   
   validates_presence_of :currency_source, :currency_receiver
   validates_presence_of :path_way, :message => "по выбранной схеме не поддерживаеться"
   
   validates_presence_of :summa
-  validates_presence_of :email, :if => lambda{ |t| !t.new_record? }
+
+  validates_presence_of :email, :if => lambda{ |t| !t.new_record?  }
   validates_format_of :email, :with => /\A[A-Z0-9_\.%\+\-]+@(?:[A-Z0-9\-]+\.)+(?:[A-Z]{2,4}|museum|travel)\z/i ,
   :if => lambda{ |t| !t.new_record? }
   validates_numericality_of :summa
@@ -41,14 +72,17 @@ class Claim < ActiveRecord::Base
   
   before_validation_on_create :set_path_way
   def set_path_way
-    self.path_way = PathWay.find_path(self.currency_source, self.currency_receiver)
+    self.path_way = PathWay.find_path(self.currency_source, self.currency_receiver) if self.currency_source &&
+      self.currency_receiver
   end
 
-
+  # после создания новой заявки
+  
   after_create :set_md5
   def set_md5
     self.md5 = Digest::MD5.hexdigest([self, Time.now.to_i].join)    
-    save
+    events.new_claim
+    save_with_validation(false)
   end
   
 # Платежная система (источник)
@@ -78,28 +112,29 @@ class Claim < ActiveRecord::Base
       find_by_id(_id)
     end
   end
+  
   aasm_column :state
-  aasm_initial_state :new
+  aasm_initial_state :new_claim
   
-  aasm_state :new,       :enter => :new_claim # новая заявка
-  aasm_state :filled,    :enter => :exchange # заявка заполнена
-  aasm_state :confirmed,  :enter => :confirmed_claim # данные потверждены и соглашение приянто
+  aasm_state :new_claim                              # новая заявка
+  aasm_state :filled,    :enter => :exchange         # заявка заполнена
+  aasm_state :confirmed, :enter => :confirmed_claim  # данные потверждены и соглашение приянто
   
-  aasm_state :pay,       :enter => :to_queue  # заявка оплачена
-  aasm_state :complete,  :enter => :complete_claim # заявка завершена
+  aasm_state :pay,       :enter => :to_queue         # заявка оплачена
+  aasm_state :complete,  :enter => :complete_claim   # заявка завершена
   
-  aasm_state :cancel,    :enter => :cancel_claim  # заявка отменена
-  aasm_state :error,     :enter => :error_claim # заявка завершена с ошибкой
+  aasm_state :cancel,    :enter => :cancel_claim     # заявка отменена
+  aasm_state :error,     :enter => :error_claim      # заявка завершена с ошибкой
 
   
   # заполнили заявку
   aasm_event :fill do
-    transitions :to => :filled, :from => [:new, :confirmed]
+    transitions :to => :filled, :from => [:new_claim, :confirmed]
   end
     
   # заполнили заявку
   aasm_event :edit do
-    transitions :to => :new, :from => :filled
+    transitions :to => :new_claim, :from => :filled
   end
   
   # потдвердили заявку
@@ -112,11 +147,6 @@ class Claim < ActiveRecord::Base
     transitions :to => :pay, :from => :confirmed
   end  
   
-  # # заявка в очереди на перечесление денег
-  # aasm_event :to_queue do
-  #   transitions :to => :queue, :from => :pay
-  # end  
-  
   # заявка выполнена
   aasm_event :completed do
     transitions :to => :complete, :from => :pay
@@ -124,15 +154,15 @@ class Claim < ActiveRecord::Base
   
   # заявка выполнена
   aasm_event :canceled do
-    transitions :to => :cancel, :from => [:new, :filled, :confirmed]
+    transitions :to => :cancel, :from => [:new_claim, :filled, :confirmed]
   end  
   
   # заявка не выполнена из-за ошибки
   aasm_event :erroneous  do 
-    transitions :to => :error, :from => [:new, :filled, :confirmed, :pay, :complete, :cancel]
+    transitions :to => :error, :from => [:new_claim, :filled, :confirmed, :pay, :complete, :cancel]
   end
   
-  # Вычисляем обмен валюты
+  # Вычисляем обмен валюты и отправляем что создана новая заявка
   def exchange
     # поля в таблице
     # summa - исходная сумма
@@ -146,6 +176,7 @@ class Claim < ActiveRecord::Base
     self.service_fee = (self.summa / 100.0)* self.path_way.fee.to_f
     self.receivable_source = self.summa - (self.fee + self.service_fee)
     self.receivable_receive = self.receivable_source * self.path_way.rate
+    Notifier.deliver_new_claim(self)
   end
   
   # Помещаем заявку в очередь на оплату
@@ -163,30 +194,32 @@ class Claim < ActiveRecord::Base
     end  
   end
   
-  
+
+
   # Создание сообщение для логирования по заявке и отправка сообщения на почту 
-  # 
-  
-  # Новая заявка
-  def new_claim
-  end
   
   # Заявка заполнена
   def confirmed_claim
+    Notifier.deliver_confirmed_claim(self)
+    events.confirmed_claim
   end
   
   # Заявка выполнена
   def complete_claim
+    Notifier.deliver_complete_claim(self)
+    events.complete_claim
   end
   
   # Заявка отменена
   def cancel_claim
+    Notifier.deliver_cancel_claim(self)
+    events.cancel_claim
   end
   
   # Заявка завершилась с ошибкой
   def error_claim
     Notifier.deliver_error_claim(self)
-    # Notifier.send("deliver_error_claim",self)
+
   end
   
 end

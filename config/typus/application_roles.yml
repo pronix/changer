@@ -7,3 +7,4 @@ admin:
   Currency: create, read, update, delete
   PathWay: create, read, update, delete
   PaymentSystem: create, read, update, delete
+  Event: read

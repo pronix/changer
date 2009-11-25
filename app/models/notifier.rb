@@ -3,7 +3,7 @@ class Notifier < ActionMailer::Base
 
   # Новая заявка
   def new_claim(claim)
-    subject       "Заявка № #{claim.md}: Создана новая заявка."
+    subject       "Заявка № #{claim.md5}: Создана новая заявка."
     from          "host@mail.ru"
     recipients    claim.email
     sent_on       Time.now
@@ -13,7 +13,7 @@ class Notifier < ActionMailer::Base
   
   # Заявка заполнена и подтверждена
   def confirmed_claim(claim) 
-    subject       "Заявка № #{claim.md}: Заявка заполнена."
+    subject       "Заявка № #{claim.md5}: Заявка заполнена."
     from          "host@mail.ru"
     recipients    claim.email
     sent_on       Time.now
@@ -22,7 +22,7 @@ class Notifier < ActionMailer::Base
   
   # Заявка выполнена
   def complete_claim(claim)
-    subject       "Заявка № #{claim.md}: Заявка выполнена."
+    subject       "Заявка № #{claim.md5}: Заявка выполнена."
     from          "host@mail.ru"
     recipients    claim.email
     sent_on       Time.now
@@ -31,7 +31,7 @@ class Notifier < ActionMailer::Base
   
   # Заявка отменена
   def cancel_claim(claim)
-    subject       "Заявка № #{claim.md}: Заявка отменена."
+    subject       "Заявка № #{claim.md5}: Заявка отменена."
     from          "host@mail.ru"
     recipients    claim.email
     sent_on       Time.now
@@ -40,7 +40,7 @@ class Notifier < ActionMailer::Base
   
   # Заявка завершилась с ошибкой
   def error_claim(claim)
-    subject       "Заявка № #{claim.md}: Заявка завершена с ошибкой."
+    subject       "Заявка № #{claim.md5}: Заявка завершена с ошибкой."
     from          "host@mail.ru"
     recipients    claim.email
     sent_on       Time.now

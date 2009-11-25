@@ -42,3 +42,12 @@ PaymentSystem:
   search: name
   application: changer
 
+Event:
+  fields:
+    list: message
+    form: message, parameters
+    order_by: 
+  relationships: claims
+  filters: 
+  search: messages
+  application: changer
