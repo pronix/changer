@@ -1,0 +1,44 @@
+# Typus Models Configuration File
+#
+# Use the README file as a reference to customize settings.
+
+Claim:
+  fields:
+    list: summa, state, email, fee, service_fee, receivable_source, receivable_receive, md5, currency_receiver, path_way, currency_source
+    form: summa, comment, state, option_purse, email, request_options, fee, service_fee, receivable_source, receivable_receive, payment_options, md5, response_transfert, currency_receiver, path_way, currency_source
+  order_by: 
+  relationships: currency_receiver, currency_source, path_way
+  filters: 
+  search: 
+  application: changer
+
+Currency:
+  fields:
+    list: name, code, payment_system
+    form: name, code, description, payment_system
+  order_by: 
+  relationships: path_ways, payment_system
+  filters: 
+  search: name
+  application: changer
+
+PathWay:
+  fields:
+    list: percent, rate, fee, fee_payment_system, currency_receiver, currency_source
+    form: percent, description, rate, fee, fee_payment_system, currency_receiver, currency_source
+  order_by: 
+  relationships: currency_receiver, currency_source
+  filters: 
+  search: 
+  application: changer
+
+PaymentSystem:
+  fields:
+    list: name, controller
+    form: name, description, controller, parameters
+  order_by: 
+  relationships: currencies
+  filters: 
+  search: name
+  application: changer
+

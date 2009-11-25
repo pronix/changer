@@ -1,0 +1,9 @@
+# Typus Roles Configuration File
+#
+# Use the README file as a reference to customize settings.
+
+admin:
+  Claim: create, read, update, delete
+  Currency: create, read, update, delete
+  PathWay: create, read, update, delete
+  PaymentSystem: create, read, update, delete
