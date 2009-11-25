@@ -36,7 +36,7 @@ PaymentSystem:
   fields:
     list: name, controller
     form: name, description, controller, parameters
-  order_by: 
+  order_by:
   relationships: currencies
   filters: 
   search: name
@@ -51,3 +51,13 @@ Event:
   filters: 
   search: messages
   application: changer
+SystemSetting:
+  fields:
+    list: code, name
+    form: name, setting
+    order_by: 
+  filters: 
+  search: name
+  application: changer
+
+

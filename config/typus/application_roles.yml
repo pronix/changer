@@ -8,3 +8,4 @@ admin:
   PathWay: create, read, update, delete
   PaymentSystem: create, read, update, delete
   Event: read
+  SystemSetting: create, read, update, delete

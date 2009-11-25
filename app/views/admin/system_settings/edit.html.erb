@@ -1,24 +1,29 @@
 <% content_for :sidebar do -%>
 <div id="sidebar"><h2>Действия</h2>
   <ul>
-    <li><%= link_to "Добавить запись", new_admin_payment_system_path %></li>
-    <li><%= link_to "Назад к списку", admin_payment_systems_path %></li>
+    <li><%= link_to "Добавить запись", new_admin_system_setting_path %></li>
+    <li><%= link_to "Назад к списку", admin_system_settings_path %></li>
   </ul>
 </div>
 <% end -%>
 <div id="content">
-<% semantic_form_for [:admin, @payment_system]  do |form| %>
+<% semantic_form_for [:admin, @system_setting]  do |form| %>
+
 <% form.inputs do -%>
-<%= form.input :name %>
-<%= form.input :description, :input_html => {:rows => 3 } %>
+<% if @system_setting.new_record? -%>
+<%= form.input :code %>
+<% else -%>
+<em>Код</em> <%= @system_setting.code %>
 <% end -%>
-<% form.inputs :name => "Праметры платежной системы", :id => "params_block" do -%>
+
+<%= form.input :name %>
+<% end -%>
+<% form.inputs  :id => "settings_block" do -%>
 <%= link_to "Добавит параметр", "", :id => "add_parameter"  %>
-<%= form.input :controller  %>
- <% @payment_system.parameters && @payment_system.parameters.each do |k,v| -%>
-  <li id="payment_system_paramerts_<%= k -%>_input" class="text required">
-    <label for="payment_system_parameters_<%= k -%>"><%= k %><abbr title="required">*</abbr></label>
-    <%= text_field_tag "payment_system[parameters[#{k}]]", v, :size => 40 %>
+<% @system_setting.setting && @system_setting.setting.each do |k,v| -%>
+  <li id="system_setting_setting_<%= k -%>_input" class="text required">
+    <label for="system_setting_setting_<%= k -%>"><%= k %><abbr title="required">*</abbr></label>
+    <%= text_field_tag "system_setting[setting[#{k}]]", v, :size => 40 %>
     <%= link_to "Удалить", "", :class => "remove_param" %>
   </li>
    
@@ -43,15 +48,15 @@
       {
        if (!!new_param.match(/ /) ) {
            alert("Не используйте пробелы");
-           } else if ($("#payment_system_parameters_"+new_param).length == 0){
+           } else if ($("#system_setting_setting_"+new_param).length == 0){
   
-          var param_label = "<label for='payment_system_parameters_"+new_param+"'>"
+          var param_label = "<label for='system_setting_setting_"+new_param+"'>"
                              + new_param+"<abbr title='required'>*</abbr></label>";
-          var param_input = "<input id='payment_system_parameters_"+new_param
-                             + "' type='text'  size='40' name='payment_system[parameters["+new_param+"]]'/>";
+          var param_input = "<input id='system_setting_setting_"+new_param
+                             + "' type='text'  size='40' name='system_setting[setting["+new_param+"]]'/>";
   
-          $("#params_block>ol:first").append(
-           $("<li id='payment_system_paramerts_"+new_param+"_input'class='text required'></li>")
+          $("#settings_block>ol:first").append(
+           $("<li id='system_setting_setting_"+new_param+"_input'class='text required'></li>")
                  .append(param_label).append(param_input)
                  .append($("<a href='' class='remove_param'>Удалить</a>")));
          } else {

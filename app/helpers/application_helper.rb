@@ -7,4 +7,24 @@ module ApplicationHelper
       %{ <p>#{message[flash_type]}</p> }
     end
   end
+  
+  def css
+    @css_prefix = SystemSetting.css.setting rescue nil
+    stylesheet_link_tag(
+                        [
+                         %w{application}.map { |v| "#{@css_prefix[:css_prefix]}#{v}" },
+                         "formtastic", "formtastic_changes"
+                        ].flatten, :cache => true )
+  end
+  
+  def meta_to_html
+    @meta = SystemSetting.meta.setting rescue nil
+    @meta.collect { |k,v|
+      if k.to_sym  == :title
+        content_tag(:title, v)
+      else
+        tag(:meta, :name => k.to_sym, :content => v.to_a.join(","))
+      end
+    }
+  end
 end

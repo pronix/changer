@@ -2,7 +2,16 @@ Claim.destroy_all
 PaymentSystem.destroy_all
 Currency.destroy_all
 PathWay.destroy_all
-
+SystemSetting.destroy_all
+SystemSetting.create([
+                      { :code => "meta", :name => "Meta keyword", 
+                        :setting => {:words => ["paypal","webmoney","money_bookers"] } 
+                      },
+                      { :code => "css", :name => "Css", 
+                        :setting => {:css_prefix => "ver_1_" } 
+                      },
+                      
+                       ])
 PaymentSystem.create([ { 
                          :controller => "webmoney",
                          :name => "Webmoney", 
