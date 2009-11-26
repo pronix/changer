@@ -9,7 +9,7 @@ module Webmoney
     end
 
     it "should be classic" do
-      @wm.classic?.should be_true
+      @wm.should be_classic # @wm.classic? == true
     end
     
     it "should return reqn" do
@@ -18,6 +18,16 @@ module Webmoney
       t2 = @wm.send(:reqn)
       t1.should match(/^\d{16}$/)
       (t2 > t1).should be_true
+    end
+
+    it "should correct prepare interfaces urls" do
+      wm = TestWM.new :wmid => WmConfig.wmid
+      wm.should_not be_classic
+      wm.interfaces[:balance].class.should == URI::HTTPS
+      # converted to light-auth version
+      wm.interfaces[:balance].to_s.should == 'https://w3s.wmtransfer.com/asp/XMLPursesCert.asp'
+      # non-converted to light-auth version
+      wm.interfaces[:get_passport].to_s.should == 'https://passport.webmoney.ru/asp/XMLGetWMPassport.asp'
     end
 
     it "should correct reqn" do
@@ -36,9 +46,8 @@ module Webmoney
     end
     
     it "should send request" do
-      r = @wm.send(:https_request, :check_sign, '<w3s.request/>')
-      doc = Hpricot.XML(r.gsub(/w3s\.response/,'w3s_response'))
-      doc.at('w3s_response').should_not be_nil
+      doc = Nokogiri.XML(@wm.send(:https_request, :check_sign, '<w3s.request/>'))
+      doc.root.should_not be_nil
     end
 
     it"should raise error on bad response" do
@@ -80,9 +89,13 @@ module Webmoney
     it "should check_sign with specials" do
       plan = '<test>текст</test>'
       real_plan = Iconv.conv('CP1251', 'UTF-8', plan)
-      @wm.request(:check_sign, 
-        :wmid => @wm.wmid, :plan => plan, :sign => @wm.send(:sign, real_plan )).
-        should be_true
+      begin
+      @wm.request(:check_sign,
+        :wmid => @wm.wmid,
+        :plan => plan,
+        :sign => @wm.send(:sign, real_plan )
+      ).should be_true
+      end
     end
     
     it "should parse retval and raise error on broken get_passport" do
@@ -117,7 +130,11 @@ module Webmoney
       result[:id].should match(/^\d*$/)
       ((result[:date] + 60) > Time.now).should be_true
     end
-    
+
+    it "should create transaction" do
+      # TODO @wm.request( :create_transaction, ...)
+    end
+
     it "should raise error on undefined xml func" do
       lambda { @wm.request(:unexistent_interface) }.should raise_error(::NoMethodError)
     end

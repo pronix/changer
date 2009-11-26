@@ -7,8 +7,7 @@ require 'net/http'
 require 'net/https'
 require 'rubygems'
 require 'iconv'
-require 'builder'
-require 'hpricot'
+require 'nokogiri'
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
 %w(wmsigner wmid passport purse request_xml request_retval request_result messenger).each { |lib| require lib }
@@ -31,7 +30,7 @@ module Webmoney
   class NonExistentWmidError < WebmoneyError; end
   class CaCertificateError < WebmoneyError; end
   
-  attr_reader :wmid, :error, :errormsg, :last_request
+  attr_reader :wmid, :error, :errormsg, :last_request, :interfaces
   attr_accessor :messenger
 
 
@@ -45,8 +44,6 @@ module Webmoney
     {
       :create_invoice      => w3s_url + 'XMLInvoice.asp',       # x1
       :create_transaction  => w3s_url + 'XMLTrans.asp',         # x2
-      :create_transaction  => (classic? ?
-                               (w3s_url + 'XMLTrans.asp') : "https://w3s.wmtransfer.com/asp/XMLTransCert.asp"), # x2      
       :operation_history   => w3s_url + 'XMLOperations.asp',    # x3
       :outgoing_invoices   => w3s_url + 'XMLOutInvoices.asp',   # x4
       :finish_protect      => w3s_url + 'XMLFinishProtect.asp', # x5
@@ -150,7 +147,7 @@ module Webmoney
     res = https_request(iface, make_xml(iface, opt))
 
     # Parse response
-    doc = Hpricot.XML(res)
+    doc = Nokogiri::XML(res)
     parse_retval(iface, doc)
     make_result(iface, doc)
   end
@@ -165,7 +162,11 @@ module Webmoney
   protected
 
   def prepare_interface_urls
-    @interfaces = interface_urls.inject({}){|m,k| m.merge!(k[0] => URI.parse(k[1]))}
+    @interfaces = interface_urls.inject({}) do |m,k|
+      url = k[1]
+      url.sub!(/(\.asp)/, 'Cert.asp') if !classic? && url.match("^"+w3s_url)
+      m.merge!(k[0] => URI.parse(url))
+    end
   end
 
   # Make HTTPS request, return result body if 200 OK
@@ -192,9 +193,7 @@ module Webmoney
     result = http.post( url.path, xml, "Content-Type" => "text/xml" )
     case result
       when Net::HTTPSuccess
-        # replace root tag for Hpricot
-        res = result.body.gsub(/(w3s\.response|WMIDLevel\.response)/,'w3s_response')
-        return @ic_in.iconv(res)
+        result.body
       else
         @error = result.code
         @errormsg = result.body if result.class.body_permitted?()
@@ -212,7 +211,7 @@ module Webmoney
 
   def make_xml(iface, opt)            # :nodoc:
     iface_func = "xml_#{iface}"
-    send(iface_func, opt).target!
+    send(iface_func, opt).to_xml
   end
 
   def parse_retval(iface, doc)         # :nodoc:
