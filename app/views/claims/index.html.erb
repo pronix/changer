@@ -1,25 +1,19 @@
-<h1>Универсальная система обмена интернет валют</h1>
+<%= content_tag :h1, t('views.claim.index.head') %>
 <div id="description">
   Описание сервиса
 </div>
 
-<div >
+<div>
   <% form_for :claim, :url => claims_path, :id => "new_claim" do |form| -%>
   <div>
-    <em>
-      Меняем :
-      <%= collection_select(:claim, :currency_source_id, Currency.all, :id, :name ) %>
-    </em>
-    <em>
-      на :
-      <%= collection_select(:claim, :currency_receiver_id, Currency.all, :id, :name) %>
-    </em>
-    <em>
-      Сумма :
-      <%= form.text_field :summa, :size => 12  %>
-    </em>
+    <%= content_tag :em, t('views.claim.index.change') %>:
+    <%= collection_select(:claim, :currency_source_id, Currency.all, :id, :name ) %>
+    <%= content_tag :em, t('views.claim.index.on_change') %>:      
+    <%= collection_select(:claim, :currency_receiver_id, Currency.all, :id, :name) %>
+    <%= content_tag :em, t('views.claim.index.summa') %>:            
+    <%= form.text_field :summa, :size => 12  %>
   </div>
-  <%= submit_tag "Продолжить" %>
+  <%= submit_tag t('views.claim.index.submit') %>
   <% end -%>
 </div>
 

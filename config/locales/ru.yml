@@ -1,4 +1,27 @@
 ru:
+  flash:
+    new claim: Создана новая заявка
+  views:
+    claim:
+      index:
+        head: Универсальная система обмена интернет валют
+        change: Меняем
+        on_change: на
+        summa: Сумма
+        submit: Продолжить
+
+      your claim: Ваша заявка
+      claim number: Номер заявки
+      claim state: Статус заявки
+      exchange summa: Сумма обмена
+      receivable summa: Сумма к получению
+      fees: Комиссионные сборы
+      fee source: Комиссия источника
+      fee service: Комиссия сервиса
+      state:
+        complete: Заявка выполнена
+        pay: Заявка оплачена
+
   activerecord:
     models:
       claim: Заявка на обмен
