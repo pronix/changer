@@ -9,8 +9,20 @@ module NavigationHelpers
     case page_name
     when /root_path/
       '/'
+    when /the new webmoney page/
+      new_webmoney_path
+
+    when /the new webmoney page/
+      new_webmoney_path
+
     when /the home\s?page/
       '/'
+    when /the new webmoney page/
+      new_webmoney_path
+
+    when /the new webmoney page/
+      new_webmoney_path
+
     when /webmoney/
       gateway_webmoney_path
     # Add more mappings here.
