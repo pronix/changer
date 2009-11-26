@@ -24,9 +24,9 @@ describe Claim do
               :currency_source => @wmr, :currency_receiver => @pl_usd  )
       @claim = Factory.create(:claim_wmr_to_paypal_usd, 
                               :currency_source => @wmr, :currency_receiver => @pl_usd)
-      @claim.new?.should be_true
+      @claim.new_claim?.should be_true
     end
-    
+
     
     it "должен быть не валидным если обмен не описан в системе" do 
       PathWay.destroy_all

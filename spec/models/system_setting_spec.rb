@@ -1,13 +1,8 @@
 require 'spec_helper'
 
 describe SystemSetting do
-  before(:each) do
-    @valid_attributes = {
-      :setting => "value for setting"
-    }
-  end
-
-  it "should create a new instance given valid attributes" do
-    SystemSetting.create!(@valid_attributes)
+  it "должен создавать новый экземпляр если параметры верные" do 
+    @setting = Factory(:meta_setting)
+    @setting.should be_valid
   end
 end
