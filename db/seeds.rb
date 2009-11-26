@@ -54,9 +54,6 @@ paypal.currencies.create([
                           {     
                             :name => "PayPal USD", :code => "USD",
                             :description => "PayPal"
-                          }, {     
-                            :name => "PayPal EUR", :code => "EUR",
-                            :description => "PayPal"
                           } ])
 
 
@@ -64,7 +61,7 @@ wmz = webmoney.currencies.find_by_code "WMZ"
 wmr = webmoney.currencies.find_by_code "WMR"
 
 pl_usd = paypal.currencies.find_by_code "USD"
-pl_eur = paypal.currencies.find_by_code "EUR"
+
 
 PathWay.create([
                 { 
@@ -82,22 +79,6 @@ PathWay.create([
                   :fee_payment_system => 0.8,
                   :description => "Меняем WMR на PayPal USD"
                 } ,
-                { 
-                  :currency_source => wmz,
-                  :currency_receiver => pl_eur,
-                  :rate => 1.535,
-                  :fee => 0.95,              
-                  :fee_payment_system => 0.8,                  
-                  :description => "Меняем WMZ на PayPal EUR"
-                }, { 
-                  :currency_source => wmr,
-                  :currency_receiver => pl_eur,
-                  :rate => 0.232,
-                  :fee => 0.95,   
-                  :fee_payment_system => 0.8,                  
-                  :description => "Меняем WMR на PayPal EUR"
-                } ,
-                
                 
                 { 
                   :currency_source => pl_usd,
@@ -113,18 +94,4 @@ PathWay.create([
                   :fee => 0.95,
                   :fee_payment_system => 0.8,                  
                   :description => "Меняем PayPal USD на WMR"
-                }, { 
-                  :currency_source => pl_eur,
-                  :currency_receiver => wmz,
-                  :rate => 0.651,
-                  :fee => 0.95,
-                  :fee_payment_system => 0.8,                  
-                  :description => "Меняем PayPal EUR на WMZ"
-                }, { 
-                  :currency_source => pl_eur,
-                  :currency_receiver => wmr,
-                  :rate => 43.0,
-                  :fee => 0.95,
-                  :fee_payment_system => 0.8,                  
-                  :description => "Меняем PayPal EUR на WMR"
                 }] )

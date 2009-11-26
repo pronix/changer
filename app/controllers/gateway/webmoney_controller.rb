@@ -2,6 +2,8 @@ class Gateway::WebmoneyController < ApplicationController
   require "gateway/webmoney/webmoney"
   require "digest/md5"
   
+  skip_before_filter :verify_authenticity_token, :only => [:payment_result, :payment_success, :payment_fail]  
+  
   before_filter :fetch_claim, :only => [:show, :update, :confirmed, :pay ]
   before_filter :parse_payment_params, :only => [:payment_result, :payment_success,
                                                  :payment_fail]
@@ -57,7 +59,6 @@ class Gateway::WebmoneyController < ApplicationController
   # Получаем данные об оплате, проверяем их, 
   # записываем данные платежа в транзакцию и закрываем оплаченную транзакцию 
   def payment_result
-    @claim =  Claim.confirmed.find_by_md5 @payment_params[:payment_no]
     @claim.payment_options = @payment_params
     if @claim.payment!
       render :text => "Success"
@@ -69,7 +70,7 @@ class Gateway::WebmoneyController < ApplicationController
   # Подтвержение успешной оплаты
   # Проверяем что нужная транзакция уже закрыта и проведена
   def payment_success
-    @claim = Claim.find_by_md5 @payment_params[:payment_no]
+    @claim = Claim.find @payment_params[:payment_no]
     if @claim && @claim.pay?
       flash[:notice] = 'Платеж выполнен'
     else
@@ -82,7 +83,7 @@ class Gateway::WebmoneyController < ApplicationController
   # Платеж отменен
   # закрываем транзакцию со статусом error (не удачное завершение транзакции)
   def payment_fail
-    @claim = Claim.confirmed.find_by_md5 @payment_params[:payment_no]
+    @claim = Claim.confirmed.find @payment_params[:payment_no]
     @claim.payment_options = params    
     @claim.comment =  @claim.comment + " Платеже завершен с ошибкой."
     @claim.erroneous!
@@ -108,23 +109,31 @@ class Gateway::WebmoneyController < ApplicationController
   
   # Проверяем верен ли платеж
   def valid_payment
+    @claim =  Claim.confirmed.find @payment_params[:payment_no]
     @gateway = @claim.payment_system_source 
     if @payment_params[:prerequest] == "1" # предварительный запрос
       render :text => "YES"
-    elsif  @gateway.parametrs[:secret].blank?  # если не указан секретный ключ
+    elsif  @gateway.parameters[:secret].blank?  # если не указан секретный ключ
       raise ArgumentError.new("WebMoney secret key is not provided") 
     elsif ! @payment_params[:hash] ==  # если мд5 не совпает
         Digest::MD5.hexdigest([
                                @payment_params[:payee_purse],    @payment_params[:payment_amount],
                                @payment_params[:payment_no],     @payment_params[:mode],
                                @payment_params[:sys_invs_no],    @payment_params[:sys_trans_no],
-                               @payment_params[:sys_trans_date], @gateway.parametrs[:secret],
+                               @payment_params[:sys_trans_date], @gateway.parameters[:secret],
                                @payment_params[:payer_purse],    @payment_params[:payer_wm]
                               ].join("")).upcase
-      
+      @claim.errors_claim ||= { }
+      @claim.errors_claim[:valid_response] = { :messages => "Неверный ответ от Платежной системы"}
+      @claim.errors_claim[:error_params] = params
+      @claim.erroneous!
       render :text => "not valid payment"
     end
-    
+  rescue
+    @claim.errors_claim ||= { }
+    @claim.errors_claim[:valid_response] = { :messages => "Ошибка при проверке правельности ответа от Плаежной системы"}
+    @claim.errors_claim[:error_params] = params
+    @claim.erroneous!
   end
   
 end

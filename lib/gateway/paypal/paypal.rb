@@ -26,13 +26,16 @@ module LibGateway
         :login => paymethod.parameters[:login],
         :password => paymethod.parameters[:password],
         :pem => nil, 
-        :signature => paymethod.parameters[:signature] 
+        :signature => paymethod.parameters[:signature],
+        :currency => claim.currency_receiver.code
       }
     
       gateway = ActiveMerchant::Billing::PaypalGateway.new(gateway_options)
-      logger.info '~'*90
-      logger.info "[ paypal ] Посылаем запрос на перечесление денег"
-      response =  gateway.transfer(claim.receivable_receive,
+      Rails.logger.info '~'*90
+      Rails.logger.info "[ paypal ] Посылаем запрос на перечесление денег"
+      
+      summa = claim.receivable_receive*100 # потому что  ActiveMerchant работает только с центами
+      response =  gateway.transfer(summa,
                                    claim.option_purse[:purse_dest],
                                    :subject => "Перечесление с обменика",
                                    :note => "") 
@@ -43,13 +46,13 @@ module LibGateway
       
       if response.success?
         # Перечисление денег успечшно
-        logger.info '~'*90
-        logger.info "[ paypal ] Запрос выполнен успешно"
+        Rails.logger.info '~'*90
+        Rails.logger.info "[ paypal ] Запрос выполнен успешно"
         return true
       else
         # Перечисление денег не успечшно
-        @errors[:messages] = response.messages
-        logger.error "[ paypal ] Запрос выполнен с ошибкой #{response.message}"
+        @errors[:messages] = response.message
+        Rails.logger.error "[ paypal ] Запрос выполнен с ошибкой #{response.message}"
         return false
       end
         

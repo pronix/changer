@@ -21,8 +21,8 @@ module LibGateway
       gateway = WebmoneyTransfert.new(claim)
       
       begin
-        logger.info '~'*90
-        logger.info "[ webmoney ] Посылаем запрос на перечесление денег" 
+        Rails.logger.info '~'*90
+        Rails.logger.info "[ webmoney ] Посылаем запрос на перечесление денег" 
         response = gateway.transfert
         claim.response_transfert = response
         return true

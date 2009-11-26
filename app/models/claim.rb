@@ -7,7 +7,6 @@
 =end
 require "gateway/paypal/paypal"
 require "gateway/webmoney/webmoney"
-
 class Claim < ActiveRecord::Base
   include AASM
   attr_protected :receivable, :fee, :service_fee
@@ -15,42 +14,7 @@ class Claim < ActiveRecord::Base
   belongs_to :currency_source, :class_name => "Currency"
   belongs_to :currency_receiver, :class_name => "Currency" 
   belongs_to :path_way, :class_name => "PathWay"  
-  has_many :events, :dependent => :delete_all do 
-    # Новая заявка
-    def new_claim 
-      build({ 
-              :message => "Создана новая заявка ##{proxy_owner.id} : #{proxy_owner.md5}",
-              :parameters => proxy_owner.request_options
-            })
-    end
-    
-    def confirmed_claim
-      build({ 
-              :message => "Заявка потверждена и отправлена на оплату ##{proxy_owner.id} : #{proxy_owner.md5}"
-            })
-    end
-
-    def complete_claim
-      build({ :message => "Заявка завершена ##{proxy_owner.id} : #{proxy_owner.md5}", 
-              :parameters => proxy_owner.response_transfert
-            })
-    end
-    
-    def cancel_claim
-      build({ 
-              :message => "Заявка отменена ##{proxy_owner.id} : #{proxy_owner.md5}",
-              :parameters => proxy_owner.errors_claim
-            })
-    end
-  
-    def error_claim
-      build({ 
-              :message => "Заявка завершена с ошибкой ##{proxy_owner.id} : #{proxy_owner.md5}",
-              :parameters => proxy_owner.errors_claim
-            })
-    end
-    
-  end
+  has_many :events, :dependent => :delete_all, :extend => EventExtension 
   
   serialize :option_purse, Hash # параметры кошелька пользователя
   serialize :request_options, Hash # параметры запроса откуда создаеться заявка
@@ -77,7 +41,7 @@ class Claim < ActiveRecord::Base
   end
 
   # после создания новой заявки
-  
+  # создаем хэш и записываем собыитие что заявка создана
   after_create :set_md5
   def set_md5
     self.md5 = Digest::MD5.hexdigest([self, Time.now.to_i].join)    
@@ -184,6 +148,7 @@ class Claim < ActiveRecord::Base
     self.send_later(:transfert)
   end
   
+  
   # Выполняем перевод денего в новую платежныю систему пользователя
   def transfert
     gateway = "lib_gateway/#{self.payment_system_receiver.controller}".camelize.constantize.new
@@ -219,8 +184,7 @@ class Claim < ActiveRecord::Base
   # Заявка завершилась с ошибкой
   def error_claim
     Notifier.deliver_error_claim(self)
-
+    events.error_claim
   end
-  
 end
 
