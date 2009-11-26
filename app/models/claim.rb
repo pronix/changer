@@ -49,7 +49,7 @@ class Claim < ActiveRecord::Base
     save_with_validation(false)
   end
   
-# Платежная система (источник)
+  # Платежная система (источник)
   def payment_system_source
     currency_source.payment_system
   end

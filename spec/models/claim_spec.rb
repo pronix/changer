@@ -18,8 +18,8 @@ describe Claim do
       @claim.should be_valid
       @claim.errors.should be_empty
     end
-    
-    it "должен установить соостояние заявки new" do 
+
+    it "должен установить соостояние заявки new_claim" do 
       Factory(:path_way_wmr_to_paypal_usd, 
               :currency_source => @wmr, :currency_receiver => @pl_usd  )
       @claim = Factory.create(:claim_wmr_to_paypal_usd, 
@@ -65,7 +65,7 @@ describe Claim do
 
     end
     it "должен посчитать сумму к выдачи в новой валюте" do 
-      @claim.receivable_receive.should == (479.5 * 0.035)
+      @claim.receivable_receive.should == (479.5 * 0.035).round(2)
     end
   end
 end

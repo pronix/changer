@@ -1,5 +1,5 @@
 =begin rdoc
-Для работы с webmoney
+Для работы с paypal
 =end
 module LibGateway
   class Paypal
@@ -8,6 +8,7 @@ module LibGateway
     def initialize
       @errors = { }
     end
+    
     # валидация параметров option_purse для заявки
     def valid_params(options)
       # Проверяем чтоб кошелек был валидны

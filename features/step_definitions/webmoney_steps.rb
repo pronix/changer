@@ -68,18 +68,3 @@ end
 То /^должен увидеть сообщение об ошибке$/ do
   response.should have_tag("div#flash[class='flash_error']")  
 end
-
-Given /^the following webmoneys:$/ do |webmoneys|
-  Gateway::Webmoney.create!(webmoneys.hashes)
-end
-
-When /^I delete the (\d+)(?:st|nd|rd|th) webmoney$/ do |pos|
-  visit webmoneys_url
-  within("table > tr:nth-child(#{pos.to_i+1})") do
-    click_link "Destroy"
-  end
-end
-
-Then /^I should see the following webmoneys:$/ do |expected_webmoneys_table|
-  expected_webmoneys_table.diff!(table_at('table').to_a)
-end

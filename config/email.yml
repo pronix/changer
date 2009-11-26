@@ -1,10 +1,11 @@
 development:
-  :address: smtp.server.com
-  :port: 25
-  :domain: domain
-  :authentication: plain
-  :user_name: user
-  :password: pass
+  :address: smtp.gmail.com
+  :port: 587
+  :domain: changer.com
+  :authentication: :plain
+  :user_name: name@gmail.com
+  :password: "pass"
+  :enable_starttls_auto: true
 production:
   :address: smtp.server.com
   :port: 25
