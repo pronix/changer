@@ -1,3 +1,6 @@
+=begin rdoc
+Только для вывода списка валют, на которые можно делать обмен.
+=end
 class PathWaysController < ApplicationController
   def show
     unless params[:currency].blank?

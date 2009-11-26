@@ -4,12 +4,13 @@
 
 Claim:
   fields:
-    list: summa, state, email, fee, service_fee, receivable_source, receivable_receive, md5, currency_receiver, path_way, currency_source
+    list: id, created_at, state, summa, receivable_receive, email, service_fee,
+          currency_source, currency_receiver
     form: summa, comment, state, option_purse, email, request_options, fee, service_fee, receivable_source, receivable_receive, payment_options, md5, response_transfert, currency_receiver, path_way, currency_source
   order_by: 
-  relationships: currency_receiver, currency_source, path_way
-  filters: 
-  search: 
+  relationships: currency_receiver, currency_source, path_way, events
+  filters: created_at
+  search: email
   application: changer
 
 Currency:
@@ -44,13 +45,13 @@ PaymentSystem:
 
 Event:
   fields:
-    list: message
-    form: message, parameters
+    list: message, created_at
+    form: message, created_at, parameters
     order_by: 
-  relationships: claims
+  relationships: claim
   filters: 
   search: messages
-  application: changer
+
 SystemSetting:
   fields:
     list: code, name

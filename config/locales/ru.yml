@@ -28,11 +28,19 @@ ru:
       path_way: Способ обмена
       currency: Валюта
       payment_system: Платежные системы
+      event: События
     attributes: 
       claim:
         path_way: Способ обмена
         summa: Сумма
         agree: Все понимаю и согласен
+        fee: Комиссия источника
+        service_fee: Комиссия сервиса
+        state: Состояние
+        receivable_receive: К получению
+        created_at: Дата
+        currency_source: Начальная валюта
+        currency_receiver: Обменная валюта
       path_way:
         currency_source: Что меняем
         currency_receiver: На что меняем 

@@ -139,7 +139,7 @@ class Claim < ActiveRecord::Base
     self.fee = (self.summa / 100.0)* self.path_way.fee_payment_system.to_f
     self.service_fee = (self.summa / 100.0)* self.path_way.fee.to_f
     self.receivable_source = self.summa - (self.fee + self.service_fee)
-    self.receivable_receive = self.receivable_source * self.path_way.rate
+    self.receivable_receive = (self.receivable_source * self.path_way.rate).round(2)
     Notifier.deliver_new_claim(self)
   end
   

@@ -5,12 +5,10 @@ class Gateway::WebmoneyController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => [:payment_result, :payment_success, :payment_fail]  
   
   before_filter :fetch_claim, :only => [:show, :update, :confirmed, :pay ]
-  before_filter :parse_payment_params, :only => [:payment_result, :payment_success,
-                                                 :payment_fail]
+  before_filter :parse_payment_params, :only => [:payment_result, :payment_success, :payment_fail]
   before_filter :valid_payment, :only => [:payment_result]
   
   # Заполнение данных для заявки
-  
   # выводим форму чтоб пользователь заполнил сумму и кошелек
   def show
     @claim.edit! if @claim.filled?    
@@ -31,7 +29,7 @@ class Gateway::WebmoneyController < ApplicationController
   end
   
   # еще раз выводим пользователю его данные  по заявке, курс обмена, 
-  # начальная сумма, конечная сумма, коммисиия
+  # начальная сумма, конечная сумма, коммисионные сборы
   def confirmed
     if !request.put?
       # выводим форму потдверждения
