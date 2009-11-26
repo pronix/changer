@@ -1,9 +1,11 @@
 <% semantic_form_for [:gateway, @claim], :url => confirmed_gateway_webmoney_path, :method => :post do |form| %>
 <div class="data_claim">
-  <h3>Данные обмена</h3>
+  <%= content_tag :h4, t('views.webmoney.confirmed.head') %>
   <div><%= render :partial => '/gateway/shared/confirmed', :object => @claim %></div>
   <hr />
-  <div><em>Ваш кошелек:</em><%= @claim.option_purse[:purse_dest] %></div>
+  <div>
+      <%= content_tag :em, t('views.webmoney.confirmed.your_purse') %>:
+      <%= @claim.option_purse[:purse_dest] %></div>
   <hr />
 </div>
 
@@ -15,7 +17,7 @@
     <%= form.input :agree, :as => :boolean %>
   <% end -%>
   <% form.buttons do -%>
-    <%= form.commit_button "Продолжить" %>
-    <%= link_to "Редактировать", gateway_webmoney_path %>    
+    <%= form.commit_buttont('views.webmoney.confirmed.submit') %>
+    <%= link_to t('views.webmoney.confirmed.edit'), gateway_webmoney_path %>    
   <% end -%>
 <% end -%>

@@ -12,6 +12,7 @@ Rails::Initializer.run do |config|
   config.gem 'authlogic'
   config.gem 'aasm'
   config.gem 'yaroslav-russian', :lib => 'russian'  
+  config.gem 'daemons'
   
   config.time_zone = 'UTC'
 

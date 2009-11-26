@@ -1,7 +1,6 @@
 <div class="payment_content">
-
   <div>
-    <h3>Обмен</h3>
+    <%= content_tag :h4, t('views.webmoney.show.head') %>
     <%= render :partial => 'gateway/shared/info', :object => @claim %>      
   </div>
   
@@ -22,7 +21,7 @@
   <%= form.input :comment, :input_html => {:rows => 5 }  %>
   <% end -%>
   <% form.buttons do -%>
-  <%= form.commit_button "Продолжить" %>
+  <%= form.commit_button t('views.webmoney.show.submit') %>
   <% end -%>
   <% end %>
 </div>

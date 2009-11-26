@@ -1,50 +1,16 @@
 class Notifier < ActionMailer::Base
   default_url_options[:host] = "localhost:3000"
+  
+  %w{new_claim confirmed_claim complete_claim cancel_claim error_claim}.each do |method_name|
 
-  # Новая заявка
-  def new_claim(claim)
-    subject       "Заявка № #{claim.id}: Создана новая заявка."
-    from          "host@mail.ru"
-    recipients    claim.email
-    sent_on       Time.now
-    body          :claim => claim
-    
-  end
-  
-  # Заявка заполнена и подтверждена
-  def confirmed_claim(claim) 
-    subject       "Заявка № #{claim.id}: Заявка заполнена."
-    from          "host@mail.ru"
-    recipients    claim.email
-    sent_on       Time.now
-    body          :claim => claim
-  end
-  
-  # Заявка выполнена
-  def complete_claim(claim)
-    subject       "Заявка № #{claim.id}: Заявка выполнена."
-    from          "host@mail.ru"
-    recipients    claim.email
-    sent_on       Time.now
-    body          :claim => claim
-  end
-  
-  # Заявка отменена
-  def cancel_claim(claim)
-    subject       "Заявка № #{claim.id}: Заявка отменена."
-    from          "host@mail.ru"
-    recipients    claim.email
-    sent_on       Time.now
-    body          :claim => claim
-  end
-  
-  # Заявка завершилась с ошибкой
-  def error_claim(claim)
-    subject       "Заявка № #{claim.id}: Заявка завершена с ошибкой."
-    from          "host@mail.ru"
-    recipients    claim.email
-    sent_on       Time.now
-    body          :claim => claim
+    define_method(method_name) do |claim|
+      subject      I18n.t("mailer.subject.#{method_name}", :claim_id => claim.id)
+      from          "changer@gmail.com"
+      recipients    claim.email
+      sent_on       Time.now
+      body          :claim => claim
+    end
+
   end
   
 end

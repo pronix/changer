@@ -1,7 +1,27 @@
 ru:
+  mailer:
+    subject:
+      new_claim: 'Заяка № {{claim_id}}: Создана новая заявка.'
+      confirmed_claim: 'Заяка № {{claim_id}}: Заявка заполнена.'
+      complete_claim: 'Заяка № {{claim_id}}: Заявка выполнена.'
+      cancel_claim: 'Заяка № {{claim_id}}: Заявка отменена.'
+      error_claim: 'Заяка № {{claim_id}}: Заявка завершена с ошибкой.'
   flash:
     new claim: Создана новая заявка
   views:
+    webmoney:
+      show:
+        head: Обмен
+        submit: Продолжить
+      confirmed:
+        head: Данные обмена
+        submit: Продолжить
+        edit: Редактировать
+        your_purse: Ваш кошелек
+      pay:
+        head: Обмен валюты
+        submit_pay: Оплатить
+        description: 'Обмен интернет валют. {{param}}'
     claim:
       index:
         head: Универсальная система обмена интернет валют

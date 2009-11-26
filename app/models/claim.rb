@@ -140,7 +140,7 @@ class Claim < ActiveRecord::Base
     self.service_fee = (self.summa / 100.0)* self.path_way.fee.to_f
     self.receivable_source = self.summa - (self.fee + self.service_fee)
     self.receivable_receive = (self.receivable_source * self.path_way.rate).round(2)
-    Notifier.deliver_new_claim(self)
+    Notifier.send_later(:deliver_new_claim, self)            
   end
   
   # Помещаем заявку в очередь на оплату
@@ -162,29 +162,14 @@ class Claim < ActiveRecord::Base
 
 
   # Создание сообщение для логирования по заявке и отправка сообщения на почту 
-  
-  # Заявка заполнена
-  def confirmed_claim
-    Notifier.deliver_confirmed_claim(self)
-    events.confirmed_claim
+
+  %w{ confirmed_claim complete_claim cancel_claim error_claim }.each do |method_name|
+    define_method(method_name) do 
+      Notifier.send_later("deliver_#{method_name}".to_sym, self)        
+      events.send(method_name.to_sym)
+    end
   end
-  
-  # Заявка выполнена
-  def complete_claim
-    Notifier.deliver_complete_claim(self)
-    events.complete_claim
-  end
-  
-  # Заявка отменена
-  def cancel_claim
-    Notifier.deliver_cancel_claim(self)
-    events.cancel_claim
-  end
-  
-  # Заявка завершилась с ошибкой
-  def error_claim
-    Notifier.deliver_error_claim(self)
-    events.error_claim
-  end
+
 end
+
 
