@@ -1,9 +1,26 @@
-Просмотр заявки и ее статус
-<div>
-  <% @claim.attributes.each do |k,v| -%>
-  <div>
-    <em><%= k %>:</em><%= v %>
-  </div>
-  <% end -%>
-
+<div id="content_claim">
+  <%= render :partial => 'show' %>
 </div>
+
+<% content_for :js do -%>
+<%= javascript_include_tag "jquery.timers"  %>
+<script type="text/javascript" charset="utf-8">
+  $(function(){
+  
+   $("#content_claim").everyTime(15000, 'timer_claim', function(i) {
+     $.ajax({
+                  url: "<%= claims_path(:format => :js)%>",
+              success: function(data, textStatus) {
+                      $("#content_claim").html(data);
+                      },
+                error: function(XMLHttpRequest, textStatus, errorThrown){
+                      $("#content_claim").html(XMLHttpRequest.responseText);
+                      $("#content_claim").stopTime('timer_claim');
+                      }
+  
+           });
+    });
+
+  });
+</script>
+<% end -%>

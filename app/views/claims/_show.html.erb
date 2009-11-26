@@ -1,0 +1,32 @@
+<%= content_tag :h2, t('views.claim.your claim') %>
+<hr />
+<div>
+  <%= content_tag :em, t('views.claim.claim number') %>: <span>#<%= @claim.id %></span>
+</div>
+<div>
+  <%= content_tag :em, t('views.claim.claim state') %>: <span><%= t("views.claim.state.#{@claim.aasm_current_state}") %></span>
+</div>
+<div>
+  <%= content_tag :em, t("views.claim.exchange summa") %>:
+  <span><%= number_to_currency(@claim.summa, :unit => @claim.currency_source.code) %></span>
+</div>
+<div>
+  <%= content_tag :em, t("views.claim.receivable summa") %>:
+  <span> <%= number_to_currency(@claim.receivable_receive, :unit => @claim.currency_receiver.code) %></span>
+</div>
+<hr/>
+<div>
+  <%= content_tag :span, t('views.claim.fees') %>:
+  <div style="border:.05em solid gray;">
+    <%= content_tag :em, t('views.claim.fee source') %>:
+    <span> <%= number_to_currency(@claim.fee, :unit => @claim.currency_source.code) %></span>
+    <span>(<%= number_to_percentage(@claim.path_way.fee_payment_system.to_f, :precision => 2) %>)</span>
+    <br/>
+    <%= content_tag :em, t('views.claim.fee service') %>:    
+    <span> <%= number_to_currency(@claim.service_fee, :unit => @claim.currency_source.code) %></span>
+    <span>(<%= number_to_percentage(@claim.path_way.fee.to_f, :precision => 2) %>)</span>
+    <br/>
+  </div>
+</div>
+<hr />
+

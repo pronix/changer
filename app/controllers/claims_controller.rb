@@ -9,7 +9,8 @@ class ClaimsController < ApplicationController
     @claim = Claim.find_claim session[:claim_id] 
     respond_to do |format|
       format.html { }
-      format.js { render :action => :show, :layout => false }
+      format.js { render :partial => 'show', :layout => false,
+        :status => ([:complete,:error, :cancel].include?(@claim.aasm_current_state) ? 404 : :ok) }
     end
   end
   
@@ -19,7 +20,7 @@ class ClaimsController < ApplicationController
     @claim.request_options = parse_request
     
     if @claim.save
-      flash[:notice] = 'Создана новая заявка'
+      flash[:notice] = t('flash.new claim')
       session[:claim_id] = @claim.id
       # Отправляем на заполнение параметров куда 
       # надо переводить денежные средства
