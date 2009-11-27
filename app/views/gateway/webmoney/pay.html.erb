@@ -8,7 +8,9 @@
     <%= hidden_field_tag "LMI_PAYMENT_DESC_BASE64", [ t('views.webmoney.pay.description', :param => '')].pack("m") %>
     <%= hidden_field_tag "LMI_PAYMENT_NO", @claim.id %>
     <%= hidden_field_tag "LMI_PAYMENT_AMOUNT", @claim.summa %>     
-    <%= hidden_field_tag "LMI_PAYEE_PURSE", @claim.payment_system_source.parameters[:payee_purse] %>
+    <%= hidden_field_tag "LMI_PAYEE_PURSE",
+        @claim.currency_source.parameters(:payee_purse)  ||
+        @claim.payment_system_source.parameters[:payee_purse] %>
     <% if "development" == RAILS_ENV  -%>
     <%= hidden_field_tag "LMI_SIM_MODE",2  %>
     <% end -%>

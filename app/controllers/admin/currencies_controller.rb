@@ -33,5 +33,12 @@ class Admin::CurrenciesController < Admin::MasterController
   end
 
 =end
-
+  def new
+    @currency = Currency.new
+    render :action => :edit
+  end
+  
+  def edit
+    @currency = Currency.find params[:id]
+  end
 end

@@ -1,6 +1,7 @@
 class PaymentSystem < ActiveRecord::Base
   has_many :currencies # валюты платежной системы
   serialize :parameters, Hash
+  
   def parameters(field=nil)
     if field.blank?
       read_attribute(:parameters)

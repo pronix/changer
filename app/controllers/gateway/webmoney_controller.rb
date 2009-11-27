@@ -109,16 +109,18 @@ class Gateway::WebmoneyController < ApplicationController
   def valid_payment
     @claim =  Claim.confirmed.find @payment_params[:payment_no]
     @gateway = @claim.payment_system_source 
+    @secret = @claim.currency_source.parameters(:secret) ||
+      claim.payment_system_source.parameters(:secret)
     if @payment_params[:prerequest] == "1" # предварительный запрос
       render :text => "YES"
-    elsif  @gateway.parameters[:secret].blank?  # если не указан секретный ключ
+    elsif  @secret.blank?  # если не указан секретный ключ
       raise ArgumentError.new("WebMoney secret key is not provided") 
     elsif ! @payment_params[:hash] ==  # если мд5 не совпает
         Digest::MD5.hexdigest([
                                @payment_params[:payee_purse],    @payment_params[:payment_amount],
                                @payment_params[:payment_no],     @payment_params[:mode],
                                @payment_params[:sys_invs_no],    @payment_params[:sys_trans_no],
-                               @payment_params[:sys_trans_date], @gateway.parameters[:secret],
+                               @payment_params[:sys_trans_date], @secret,
                                @payment_params[:payer_purse],    @payment_params[:payer_wm]
                               ].join("")).upcase
       @claim.errors_claim ||= { }

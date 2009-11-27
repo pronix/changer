@@ -4,6 +4,8 @@ class Currency < ActiveRecord::Base
   validates_presence_of :payment_system
   validates_uniqueness_of :code, :scope => [:payment_system_id]
   
+  serialize :parameters, Hash
+  
   belongs_to :payment_system
   has_many :path_ways, :class_name => "PathWay",
   :readonly => true, :finder_sql => %q{ 
@@ -15,4 +17,11 @@ class Currency < ActiveRecord::Base
   }
   
   
+  def parameters(field=nil)
+    if field.blank?
+      read_attribute(:parameters)
+    else
+      read_attribute(:parameters) && read_attribute(:parameters)[field.to_sym]
+    end
+  end
 end
