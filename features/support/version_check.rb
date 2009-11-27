@@ -1,6 +1,6 @@
 require 'cucumber/formatter/ansicolor'
 extend Cucumber::Formatter::ANSIColor
-if Cucumber::VERSION != '0.4.3'
+if Cucumber::VERSION != '0.4.4'
 warning = <<-WARNING
 #{red_cukes(15)} 
 

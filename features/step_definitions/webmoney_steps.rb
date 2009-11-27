@@ -68,3 +68,43 @@ end
 То /^должен увидеть сообщение об ошибке$/ do
   response.should have_tag("div#flash[class='flash_error']")  
 end
+
+То /^должен увидеть ссылку "([^\"]*)"$/ do |link|
+  response.should have_tag("a[href='#{link}']")  
+end
+
+Допустим /^Я создал заявку обмена с "([^\"]*)" на "([^\"]*)" и перешел на страницу подтверждения данных$/ do |source, receiver|
+  Claim.destroy_all  
+  @source_currency =  Factory(source.to_sym) 
+  @receive_currency =  Factory(receiver.to_sym)
+  @path = Factory(:path_way_paypal_usd_to_wmr, 
+          :currency_source => @source_currency,
+          :currency_receiver => @receive_currency, :rate => 0.023 )
+  
+  visit path_to("root_path")
+  fill_in("claim_currency_source_id", :with => @source_currency.id)
+  fill_in("claim_currency_receiver_id", :with => @receive_currency.id)
+  fill_in("claim_summa", :with => 2000)
+
+  click_button("Продолжить")
+  fill_in("claim_summa", :with => 2000)  
+  fill_in("claim_email", :with => "test@gmail.com")
+  fill_in("claim_option_purse_purse_dest", :with => "R121212121212")  
+  click_button("Продолжить")
+end
+
+Если /^Я согласился с условиями сервиса включил флажок "([^\"]*)"$/ do |field|
+  check(field_with_id(field))
+end
+
+То /^должен установить состояние заявки "([^\"]*)"$/ do |state|
+  Claim.last.send(state.to_sym).should be_true
+end
+
+То /^должен увидеть форму оплаты$/ do
+  url =   Claim.last.payment_system_source.parameters[:url]
+  response.should have_tag("form[action=#{url}]")  
+  response.should have_tag("input[name=encrypted]")  
+  response.should have_tag("input[name=commit]", :value => "Оплатить")  
+end
+
