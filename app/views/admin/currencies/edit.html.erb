@@ -1,0 +1,67 @@
+<% content_for :sidebar do -%>
+<div id="sidebar"><h2>Действия</h2>
+  <ul>
+    <li><%= link_to "Добавить запись", new_admin_currency_path %></li>
+    <li><%= link_to "Назад к списку", admin_currencies_path %></li>
+  </ul>
+</div>
+<% end -%>
+<div id="content">
+<% semantic_form_for [:admin, @currency]  do |form| %>
+<% form.inputs do -%>
+<%= form.input :name %>
+<%= form.input :code %>
+<%= form.input :payment_system %>
+<%= form.input :description, :input_html => {:rows => 3 } %>
+<% end -%>
+
+<% form.inputs :name => "Праметры валюты", :id => "params_block" do -%>
+<%= link_to "Добавит параметр", "", :id => "add_parameter"  %>
+ <% @currency.parameters && @currency.parameters.each do |k,v| -%>
+  <li id="currency_paramerts_<%= k -%>_input" class="text required">
+    <label for="currency_parameters_<%= k -%>"><%= k %><abbr title="required">*</abbr></label>
+    <%= text_field_tag "currency[parameters[#{k}]]", v, :size => 40 %>
+    <%= link_to "Удалить", "", :class => "remove_param" %>
+  </li>
+   
+  <% end -%>
+<% end -%>
+<% form.buttons do -%>
+<%= form.commit_button "Сохранить" %>
+<% end -%>
+<% end -%>
+</div>
+<script type="text/javascript" charset="utf-8">
+  $(function(){
+  
+  $(".remove_param").live("click",function(){
+    $(this).parents("li:first").remove();return false;
+   });
+  
+  $("#add_parameter").click(function(){
+   var new_param = prompt("Имя нового праметра","");
+       new_param = $.trim(new_param);
+     if (new_param)
+      {
+       if (!!new_param.match(/ /) ) {
+           alert("Не используйте пробелы");
+           } else if ($("#payment_system_parameters_"+new_param).length == 0){
+  
+          var param_label = "<label for='currency_parameters_"+new_param+"'>"
+                             + new_param+"<abbr title='required'>*</abbr></label>";
+          var param_input = "<input id='currency_parameters_"+new_param
+                             + "' type='text'  size='40' name='currency[parameters["+new_param+"]]'/>";
+  
+          $("#params_block>ol:first").append(
+           $("<li id='currency_paramerts_"+new_param+"_input'class='text required'></li>")
+                 .append(param_label).append(param_input)
+                 .append($("<a href='' class='remove_param'>Удалить</a>")));
+         } else {
+             alert("Такой параметр уже есть");
+         };
+       
+       };
+     return false;
+  });
+  });
+</script>
