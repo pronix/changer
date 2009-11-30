@@ -9,16 +9,16 @@
 #       Choose the win32 build.
 #       Install PostgreSQL and put its /bin directory on your path.
 development:
-  adapter: postgresql
+  adapter: postgresql 
   encoding: unicode
   database: changer_development
   pool: 5
   username: changer
-  password:
-
-  # Connect on a TCP socket. Omitted by default since the client uses a
-  # domain socket that doesn't need configuration. Windows does not have
-  # domain sockets, so uncomment these lines.
+  password: changer
+ 
+  # Connect on a TCP socket. Omitted by default since the client uses a 
+  # domain socket that doesn't need configuration. Windows does not have 
+  # domain sockets, so uncomment these lines. 
   #host: localhost
   #port: 5432
 
@@ -40,15 +40,13 @@ test: &TEST
   database: changer_test
   pool: 5
   username: changer
-  password:
+  password: changer
 
 production:
-  adapter: postgresql
-  encoding: unicode
-  database: changer_production
+  adapter: sqlite3
+  database: db/production.sqlite3
   pool: 5
-  username: changer
-  password:
+  timeout: 5000
 
 cucumber:
   <<: *TEST
