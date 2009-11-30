@@ -13,9 +13,9 @@ set :deploy_via, :remote_cache
 set :deploy_to, "/home/#{application}"
 set :use_sudo, false
 
-role :app, "hadoop.adenin.ru"
-role :web, "hadoop.adenin.ru"
-role :db,  "hadoop.adenin.ru" , :primary => true
+role :app, "adenin.ru"
+role :web, "adenin.ru"
+role :db,  "adenin.ru" , :primary => true
 
 set :spinner, false
 set :deploy_via, :remote_cache
