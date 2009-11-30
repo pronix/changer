@@ -49,6 +49,10 @@ namespace :deploy do
         desc "#{t} task is a no-op with passenger"
         task t, :roles => :app do ; end
     end
+    task :link_current_to_appache_folder, :roles => :app do 
+    run "rm -f /var/www/changer && ln -s #{current_path} /var/www/changer"
+  end
+  
 end
 
 namespace :nginx do 
@@ -112,3 +116,4 @@ end
 # after "deploy:setup", "sqlite3:build_configuration"
  
 after "deploy", "sqlite3:link_configuration_file"
+after  "deploy",   "deploy:link_current_to_appache_folder"
