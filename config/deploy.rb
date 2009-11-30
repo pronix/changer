@@ -50,7 +50,7 @@ namespace :deploy do
         task t, :roles => :app do ; end
     end
     task :link_current_to_appache_folder, :roles => :app do 
-    run "rm -f /var/www/changer && ln -s #{current_path} /var/www/changer"
+    run "rm -fr /var/www/changer && ln -s #{current_path} /var/www/changer"
   end
   
 end
