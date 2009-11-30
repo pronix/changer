@@ -3,7 +3,7 @@ default_run_options[:pty] = true
 set :application, "changer"
 
 set :scm, :git
-set :repository,  "git clone git@github.com:pronix/changer.git"
+set :repository,  "git@github.com:pronix/changer.git"
 set :ssh_options, {:forward_agent => true}
 set :branch, "master"
 
