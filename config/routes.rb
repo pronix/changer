@@ -18,6 +18,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :payment_systems, :only => [:new, :create, :edit, :update, :index]
     admin.resources :system_settings, :only => [:new, :create, :edit, :update, :index]
     admin.resources :currencies, :only => [:new, :create, :edit, :update, :index]    
+    admin.resources :claims, :only => [ :index]        
   end  
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'

@@ -1,0 +1,9 @@
+<% item.each do |k,v| -%>
+<li>
+  <% if v.is_a? Hash -%>
+  <ul><%= render :partial => 'item', :object => v %></ul>
+  <% else -%>
+  <em><%= k %> : </em><span><%= v %></span>
+  <% end -%>
+</li>
+<% end -%>

@@ -19,11 +19,12 @@ class Gateway::WebmoneyController < ApplicationController
   def update
     @claim.attributes = params[:claim]
     @valid_webmoney = LibGateway::Webmoney.new 
-    if @claim.valid? && @valid_webmoney.valid_params(@claim.option_purse)
-      @claim.fill!
+    if @claim.valid? &&
+        @valid_webmoney.valid_params(@claim.option_purse) &&
+        @claim.fill!
       redirect_to confirmed_gateway_webmoney_path 
     else
-      flash[:error] = "Введенные данные не правельные"
+      flash[:error] = ["<ul>",@claim.errors.full_messages.collect{ |x| "<li>#{x}</li>"}, "</ul>"].join            
       render :action => :show
     end
   end

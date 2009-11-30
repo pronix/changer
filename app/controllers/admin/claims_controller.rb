@@ -34,4 +34,7 @@ class Admin::ClaimsController < Admin::MasterController
 
 =end
 
+  def show
+    @claim = Claim.find params[:id]
+  end
 end

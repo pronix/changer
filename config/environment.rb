@@ -14,6 +14,7 @@ Rails::Initializer.run do |config|
   config.gem 'yaroslav-russian', :lib => 'russian'  
   config.gem 'daemons'
   config.gem 'nokogiri'
+  config.gem 'money'
   config.time_zone = 'UTC'
 
   config.i18n.load_path += Dir[File.join(RAILS_ROOT, 'config', 'locales', '**', '*.{rb,yml}')]   

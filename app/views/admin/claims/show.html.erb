@@ -1,0 +1,32 @@
+<% content_for :sidebar do -%>
+<div id="sidebar"><h2>Действия</h2>
+  <ul>
+    <li><%= link_to "Назад к списку", admin_claims_path %></li>
+  </ul>
+</div>
+<% end -%>
+<div id="content">
+  <h2>Данные заявки</h2>
+  <hr />
+  <% [:summa, :comment, :state, :email, :fee, :service_fee,
+     :receivable_source, :receivable_receive, :md5, :currency_receiver, :display_path_way].each do |f| -%>
+  <div>
+    <em><%= Claim.human_attribute_name(f) %></em>:<span><%= @claim.send f %></span>
+  </div>
+  <% end -%>
+
+  <h2>Параметры</h2>
+  <hr />
+  <ul>
+    <% [:option_purse, :request_options, :payment_options,
+       :response_transfert, :errors_claim ].each do |f| -%>
+    <li>
+      <em><strong><%= Claim.human_attribute_name(f) %></strong><em>:
+          <ul>
+            <%= render :partial => 'item', :object => @claim.send(f) if @claim.send(f)  %>
+          </ul>
+    </li>
+    <% end -%>
+  </ul>
+</div>
+

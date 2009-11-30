@@ -6,7 +6,7 @@ Claim:
   fields:
     list: id, created_at, state, summa, receivable_receive, email, service_fee,
           currency_source, currency_receiver
-    form: summa, comment, state, option_purse, email, request_options, fee, service_fee, receivable_source, receivable_receive, payment_options, md5, response_transfert, currency_receiver, path_way, currency_source
+    show: summa, comment, state, email, fee, service_fee, receivable_source, receivable_receive, md5, currency_receiver, path_way, currency_source, option_purse, request_options, payment_options, response_transfert, errors_claim
   order_by: 
   relationships: currency_receiver, currency_source, path_way, events
   filters: created_at

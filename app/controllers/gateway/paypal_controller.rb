@@ -16,11 +16,11 @@ class Gateway::PaypalController < ApplicationController
   def update
     @claim.attributes = params[:claim]
     @valid_paypal = LibGateway::Paypal.new 
-    if @claim.valid? && @valid_paypal.valid_params(@claim.option_purse)
-      @claim.fill!
+    if @claim.valid? &&
+        @valid_paypal.valid_params(@claim.option_purse) && @claim.fill!
       redirect_to confirmed_gateway_paypal_path 
     else
-      flash[:error] = "Введенные данные не правельные"
+      flash[:error] = ["<ul>",@claim.errors.full_messages.collect{ |x| "<li>#{x}</li>"}, "</ul>"].join      
       render :action => :show
     end    
   end

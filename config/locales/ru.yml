@@ -43,6 +43,12 @@ ru:
         pay: Заявка оплачена
 
   activerecord:
+    errors:
+      models:
+        claim:
+          attributes:
+            reserve:
+              excess_reserve: В обменном пункте недостаточно средств для выполнения данной операции
     models:
       claim: Заявка на обмен
       path_way: Способ обмена
@@ -61,6 +67,7 @@ ru:
         created_at: Дата
         currency_source: Начальная валюта
         currency_receiver: Обменная валюта
+        request_options: Праметры запроса (при создание заявки)
       path_way:
         currency_source: Что меняем
         currency_receiver: На что меняем 

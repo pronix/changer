@@ -93,7 +93,7 @@ class Claim < ActiveRecord::Base
   
   # заполнили заявку
   aasm_event :fill do
-    transitions :to => :filled, :from => [:new_claim, :confirmed]
+    transitions :to => :filled, :from => [:new_claim, :confirmed], :guard => :valid_reserv?
   end
     
   # заполнили заявку
@@ -125,7 +125,15 @@ class Claim < ActiveRecord::Base
   aasm_event :erroneous  do 
     transitions :to => :error, :from => [:new_claim, :filled, :confirmed, :pay, :complete, :cancel]
   end
-  
+  # проверяем хватит ли денег в обменеке
+  def valid_reserv?
+    self.fee = (self.summa / 100.0)* self.path_way.fee_payment_system.to_f
+    self.service_fee = (self.summa / 100.0)* self.path_way.fee.to_f
+    self.receivable_source = self.summa - (self.fee + self.service_fee)
+    self.receivable_receive = (self.receivable_source * self.path_way.rate).round(2)
+    errors.add("reserve", "excess_reserve") if self.receivable_receive >= self.payment_system_receiver.reserve
+    errors.blank?
+  end
   # Вычисляем обмен валюты и отправляем что создана новая заявка
   def exchange
     # поля в таблице
@@ -140,8 +148,6 @@ class Claim < ActiveRecord::Base
     self.service_fee = (self.summa / 100.0)* self.path_way.fee.to_f
     self.receivable_source = self.summa - (self.fee + self.service_fee)
     self.receivable_receive = (self.receivable_source * self.path_way.rate).round(2)
-    # payment_system_receiver.reserve
-    # errors.add("reserve", "excess reserve") if self.receivable_receive >= self.payment_system_receiver.reserve
     Notifier.send_later(:deliver_new_claim, self)            
   end
   
@@ -172,6 +178,11 @@ class Claim < ActiveRecord::Base
     end
   end
 
+  
+  def display_path_way
+    path_way.description
+  end
+  
 end
 
 
