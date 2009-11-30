@@ -1,6 +1,8 @@
 <div>
   <em> Меняем : <strong><%= confirmed.currency_source.name %></strong></em>
-  <em> на : <strong><%= confirmed.currency_receiver.name %></strong></em>
+  <em> на : <strong><%= confirmed.currency_receiver.name %></strong>
+    (резерв = <%= confirmed.payment_system_receiver.reserve %>)
+  </em>
 </div>
   
 <div>

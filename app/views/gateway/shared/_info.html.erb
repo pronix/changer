@@ -1,5 +1,5 @@
 <em> Меняем : <strong><%= info.currency_source.name %></strong></em>
-<em> на : <strong><%= info.currency_receiver.name %></strong></em>
+<em> на : <strong><%= info.currency_receiver.name %></strong> (резерв = <%= info.payment_system_receiver.reserve %>)</em>
 <div>
   <em> курс </em> <strong>1.0</strong>:<strong><%= info.path_way.rate %></strong>
   <em> коммисия</em> <strong> <%= number_to_percentage(info.path_way.fee, :precision => 2) %> </strong>
