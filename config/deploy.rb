@@ -1,25 +1,21 @@
-set :application, "set your application name here"
-set :repository,  "set your repository location here"
+default_run_options[:pty] = true
 
-set :scm, :subversion
-# Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
+set :application, "changer"
 
-role :web, "your web-server here"                          # Your HTTP server, Apache/etc
-role :app, "your app-server here"                          # This may be the same as your `Web` server
-role :db,  "your primary db-server here", :primary => true # This is where Rails migrations will run
-role :db,  "your slave db-server here"
+set :scm, :git
+set :repository,  "git clone git@github.com:pronix/changer.git"
+set :ssh_options, {:forward_agent => true}
+set :branch, "master"
 
-# If you are using Passenger mod_rails uncomment this:
-# if you're still using the script/reapear helper you will need
-# these http://github.com/rails/irs_process_scripts
+set :user, "root"
 
-# namespace :deploy do
-#   task :start {}
-#   task :stop {}
-#   task :restart, :roles => :app, :except => { :no_release => true } do
-#     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
-#   end
-# end
+set :deploy_via, :remote_cache
+set :deploy_to, "/home/#{application}"
+set :use_sudo, true
+
+role :app, "hadoop.adenin.ru"
+role :web, "hadoop.adenin.ru"
+role :db,  "hadoop.adenin.ru" , :primary => true
 
 namespace :delayed_job do
   desc "Start delayed_job process" 
@@ -37,6 +33,19 @@ namespace :delayed_job do
     run "cd #{current_path}; script/delayed_job restart #{rails_env}" 
   end
 end
+
+namespace :deploy do
+    desc "Restarting passenger with restart.txt"
+    task :restart, :roles => :app, :except => { :no_release => true } do
+        run "touch #{current_path}/tmp/restart.txt"
+    end
+      
+    [:start, :stop].each do |t|
+        desc "#{t} task is a no-op with passenger"
+        task t, :roles => :app do ; end
+    end
+end
+
 
 # after "deploy:start", "delayed_job:start" 
 # after "deploy:stop", "delayed_job:stop" 
