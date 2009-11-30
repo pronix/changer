@@ -140,6 +140,8 @@ class Claim < ActiveRecord::Base
     self.service_fee = (self.summa / 100.0)* self.path_way.fee.to_f
     self.receivable_source = self.summa - (self.fee + self.service_fee)
     self.receivable_receive = (self.receivable_source * self.path_way.rate).round(2)
+    # payment_system_receiver.reserve
+    # errors.add("reserve", "excess reserve") if self.receivable_receive >= self.payment_system_receiver.reserve
     Notifier.send_later(:deliver_new_claim, self)            
   end
   
