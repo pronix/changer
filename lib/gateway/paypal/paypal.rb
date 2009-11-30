@@ -58,5 +58,16 @@ module LibGateway
       end
         
     end
+    
+
+    class << self
+      # TODO test
+      # Нужно вернуть баланс с кошелька нашего сервиса
+      def get_balance(payment_patams)
+        500000
+      end
+    end
+    
   end  
+  
 end

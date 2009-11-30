@@ -16,6 +16,7 @@ module LibGateway
       @errors.blank?
     end
 
+
     # Перевод денег
     def transfert(claim)
       gateway = WebmoneyTransfert.new(claim)
@@ -31,7 +32,14 @@ module LibGateway
       end
     end
 
-    
+    class << self
+      # TODO test
+      # Нужно вернуть баланс с кошелька нашего сервиса
+      def get_balance(payment_params)
+        # gateway = WebmoneyTransfert.new(claim)
+        500000
+      end
+    end
     
   end
   
