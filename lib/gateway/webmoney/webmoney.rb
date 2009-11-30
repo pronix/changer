@@ -19,12 +19,15 @@ module LibGateway
 
     # Перевод денег
     def transfert(claim)
-      gateway = WebmoneyTransfert.new(claim)
+      gateway = WebmoneyTransfert.new(claim.payment_system_receiver)
       
       begin
         Rails.logger.info '~'*90
         Rails.logger.info "[ webmoney ] Посылаем запрос на перечесление денег" 
-        response = gateway.transfert
+        response = gateway.transfert({ :transid => claim.id,
+                                       :pursedest => claim.option_purse[:purse_dest],
+                                       :amount => claim.receivable_receive  })
+
         claim.response_transfert = response
         return true
       rescue
@@ -36,8 +39,9 @@ module LibGateway
       # TODO test
       # Нужно вернуть баланс с кошелька нашего сервиса
       def get_balance(payment_params)
-        # gateway = WebmoneyTransfert.new(claim)
-        500000
+        gateway = WebmoneyTransfert.new(payment_params)
+        gateway.get_balance 
+      rescue 0
       end
     end
     
@@ -48,29 +52,30 @@ module LibGateway
     include ::Webmoney
     attr_accessor :cert, :wmid, :pursesrc, :transid, :pursedest, :amount
   
-    def initialize(claim)
+    def initialize(payment_params)
       @cert = OpenSSL::X509::Certificate.new(File.read(
                        File.join(RAILS_ROOT,"lib", "gateway", "webmoney", "cert", "webmoney.cer")))
-      paymethod = claim.payment_system_receiver
+      paymethod = payment_params
       @pursesrc = paymethod.parameters[:payee_purse]
       @wmid = paymethod.parameters[:wmid]
-      @transid = claim.md5 # ид заявки
-      @pursedest = claim.option_purse[:purse_dest] # кошелек пользователя
-      @amount = claim.receivable_receive # сумма к перечеслению
       super(:wmid =>@wmid, :cert => @cert )
-    
     end
   
     def bussines_level
       request(:bussines_level, :wmid => @wmid)
     end
-
+    # получение баланса 
+    def get_balance
+      webmoney_response = request(:balance, :wmid => @wmid)
+      webmoney_response[:purses][@wmid]
+    end
+    
     def transfert(options)
       request(:create_transaction, :wmid => @wmid,  
-              :transid   => @transid, # номер заявки
+              :transid   => options[:transid], # номер заявки
               :pursesrc  => @pursesrc,
-              :pursedest => @pursedest, # кошелек пользователя
-              :amount    => @amount) # сумма
+              :pursedest => options[:pursedest], # кошелек пользователя
+              :amount    => options[:amount]) # сумма
 
     end
     

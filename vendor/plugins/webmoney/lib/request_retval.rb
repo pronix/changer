@@ -19,5 +19,16 @@ module Webmoney::RequestRetval    # :nodoc:all
     # do nothing
     # retval = { 1 - found; 0 - not found }
   end
-
+  
+  def retval_create_transaction(doc)
+    retval_element = doc.at('//retval')
+    @error = retval_element.inner_html.to_i    
+    @errormsg = doc.at('//retdesc') ? doc.at('//retdesc').inner_html : ''
+    raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @error == 0    
+  end
+  
+  def retval_balance(doc)
+    # do nothing
+    # retval = { 1 - found; 0 - not found }
+  end
 end

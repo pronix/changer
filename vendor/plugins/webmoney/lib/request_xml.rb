@@ -82,7 +82,7 @@ module Webmoney::RequestXML    # :nodoc:all
     }
   end
 
-    def xml_create_transaction(opt)
+  def xml_create_transaction(opt)
     req = reqn()
     desc = @ic_out.iconv(opt[:desc])                  # description
     Nokogiri::XML::Builder.new( :encoding => 'windows-1251' ) { |x|
@@ -103,5 +103,21 @@ module Webmoney::RequestXML    # :nodoc:all
       }
     }
   end
+  
 
+  def xml_balance(opt)
+    req = reqn() 
+    Nokogiri::XML::Builder.new( :encoding => 'windows-1251' ) { |x|
+      x.send('w3s.request') {
+        if classic?
+          x.wmid @wmid          
+          x.sign sign(@plan)  
+        end
+        x.getpurses {
+          x.wmid opt[:wmid]
+        }
+      }
+    }
+  end
+  
 end

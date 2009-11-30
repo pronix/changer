@@ -37,4 +37,22 @@ module Webmoney::RequestResult    # :nodoc:all
     end )
   end
 
+  def result_balance(doc)
+    purses ={ }
+    doc.at('//purses').children.each do 
+      purses[x.at('//pursename').inner_text] = {
+        :amount => x.at('//amount').inner_text.to_f, 
+        :name => x.at('//pursename').inner_text,
+        :id => x['id']
+      }
+    end
+    
+    {  
+      :retval => doc.at('//retval').inner_html.to_i,
+      :retdesc  => (doc.at('//retdesc').inner_html rescue nil),
+      :purses  => purses
+      
+    }
+    
+  end
 end
