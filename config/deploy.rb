@@ -11,11 +11,14 @@ set :user, "root"
 
 set :deploy_via, :remote_cache
 set :deploy_to, "/home/#{application}"
-set :use_sudo, true
+set :use_sudo, false
 
 role :app, "hadoop.adenin.ru"
 role :web, "hadoop.adenin.ru"
 role :db,  "hadoop.adenin.ru" , :primary => true
+
+set :spinner, false
+set :deploy_via, :remote_cache
 
 namespace :delayed_job do
   desc "Start delayed_job process" 
@@ -46,6 +49,35 @@ namespace :deploy do
     end
 end
 
+namespace :nginx do 
+  
+  desc "start"
+  task :start, :roles => :web do 
+    run "/opt/nginx/sbin/nginx -c #{current_path}/config/nginx/production.conf"
+  end
+  
+  desc "stop"
+  task :stop, :roles => :web do 
+    run "kill -s QUIT `cat #{shared_path}/log/nginx.pid`"
+  end
+  
+  desc "reload config"
+  task :reload_config, :roles => :web do 
+    run "kill -s HUP `cat #{shared_path}/log/nginx.pid`"
+  end
+  
+  desc "reopen log"
+  task :reopen_logs, :roles => :web do 
+    run "kill -s USR1 `cat #{shared_path}/log/nginx.pid`"
+  end
+ 
+  desc "restart"
+  task :restart, :roles => :web do 
+    reload_config
+    reopen_log
+  end
+  
+end
 
 # after "deploy:start", "delayed_job:start" 
 # after "deploy:stop", "delayed_job:stop" 
