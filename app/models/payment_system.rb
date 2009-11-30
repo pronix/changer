@@ -9,4 +9,11 @@ class PaymentSystem < ActiveRecord::Base
       read_attribute(:parameters) && read_attribute(:parameters)[field.to_sym]
     end
   end
+  
+  # резерв платежной системы (баланс сервиса на этой плат. системе)
+  # 
+  def reserve
+    gateway = "lib_gateway/#{self.controller}".camelize.constantize
+    gateway.get_balance(self.parameters)
+  end
 end
