@@ -53,7 +53,7 @@ namespace :nginx do
   
   desc "start"
   task :start, :roles => :web do 
-    run "/opt/nginx/sbin/nginx -c #{current_path}/config/nginx/production.conf"
+    run "/opt/nginx2/sbin/nginx -c #{current_path}/config/nginx/production.conf"
   end
   
   desc "stop"
