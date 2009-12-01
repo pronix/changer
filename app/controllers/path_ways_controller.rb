@@ -4,9 +4,9 @@
 class PathWaysController < ApplicationController
   def show
     unless params[:currency].blank?
-      @currency = PathWay.get_currency_for_source(params[:currency]).collect{ |x| x.currency_receiver}
+      @currency = PathWay.get_currency_for_source(params[:currency]).collect{ |x| [x.currency_receiver.name, x.currency_receiver.id, x.rate] }
     else
-      @currency = Currency.all 
+      @currency = [] 
     end
 
     respond_to do |format|

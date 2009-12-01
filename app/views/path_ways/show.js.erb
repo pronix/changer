@@ -1,1 +1,3 @@
-<%= options_for_select( @currency.collect {|x| [x.name, x.id]}) %>
+<%= @currency.collect { |x| 
+ %(<option value="#{html_escape(x[1].to_s)}" data_rate="#{html_escape(x.last.to_s)}">#{html_escape(x.first.to_s)}</option>)
+ }.join("\n") %>

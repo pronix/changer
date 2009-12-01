@@ -3,13 +3,18 @@
   Описание сервиса
 </div>
 
-<div>
+<div style="border:.07em solid gray; width: 50%;">
   <% form_for :claim, :url => claims_path, :id => "new_claim" do |form| -%>
-  <div>
+  <div >
+    <div>
     <%= content_tag :em, t('views.claim.index.change') %>:
     <%= collection_select(:claim, :currency_source_id, Currency.all, :id, :name ) %>
+    </div>
+    <div>
     <%= content_tag :em, t('views.claim.index.on_change') %>:      
     <%= collection_select(:claim, :currency_receiver_id, Currency.all, :id, :name) %>
+    </div>
+    <%= content_tag :div, "", :id => "currency_rate" %>
     <%= content_tag :em, t('views.claim.index.summa') %>:            
     <%= form.text_field :summa, :size => 12  %>
   </div>
@@ -17,15 +22,25 @@
   <% end -%>
 </div>
 
-
-
 <% content_for :js do -%>
 <script type="text/javascript" charset="utf-8">
   $(function(){
     $("#claim_currency_source_id").change(function(){
         $("#claim_currency_receiver_id").
-         load("<%= path_ways_path(:currency => :id, :format => :js) %>".replace("id", $(this).val() ))
+         load("<%= path_ways_path(:currency => :id, :format => :js) %>".replace("id", $(this).val() ), "", function(){
+            $("#currency_rate").text("Курс обмена: 1 "+
+              $("#claim_currency_source_id>option:selected").text()+" к "+
+              $("#claim_currency_receiver_id>option:first").attr('data_rate') + " " +
+              $("#claim_currency_receiver_id>option:selected").text());
+            })
       });
+
+  $("#claim_currency_receiver_id").change(function(){
+    var v = $(this).find("option:selected").attr('data_rate');
+    $("#currency_rate").text("Курс обмена: 1 "+
+    $("#claim_currency_source_id>option:selected").text()+" к "+ v + " " +
+    $("#claim_currency_receiver_id>option:selected").text());
+  });
   
   });
 </script>
