@@ -87,6 +87,10 @@ module ActiveMerchant #:nodoc:
         commit 'DoCapture', build_capture_request(money, authorization, options)
       end
       
+      def balance
+        commit 'GetBalance', build_balance_request
+      end
+      
       # Transfer money to one or more recipients.
       #
       #   gateway.transfer 1000, 'bob@example.com',
@@ -139,6 +143,19 @@ module ActiveMerchant #:nodoc:
         end
 
         xml.target!        
+      end
+      
+      def build_balance_request
+        xml = Builder::XmlMarkup.new
+        
+        xml.tag! 'GetBalanceReq', 'xmlns' => PAYPAL_NAMESPACE do
+          xml.tag! 'GetBalanceRequest', 'xmlns:n2' => EBAY_NAMESPACE do
+            xml.tag! 'n2:Version', API_VERSION
+            xml.tag! 'ReturnallCurrencies', 0
+          end
+        end
+
+        xml.target!                
       end
       
       def build_credit_request(money, identification, options)

@@ -63,8 +63,17 @@ module LibGateway
     class << self
       # TODO test
       # Нужно вернуть баланс с кошелька нашего сервиса
-      def get_balance(payment_patams)
-        500000
+      def get_balance(payment_system)
+        gateway_options = {
+          :login =>     payment_system.parameters[:login],
+          :password =>  payment_system.parameters[:password],
+          :pem => nil, 
+          :signature => payment_system.parameters[:signature]
+        }
+    
+        gateway = ActiveMerchant::Billing::PaypalGateway.new(gateway_options)
+        response =  gateway.balance
+        response.success? ? response.params["balance"] : 0
       end
     end
     
