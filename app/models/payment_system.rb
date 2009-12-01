@@ -14,6 +14,6 @@ class PaymentSystem < ActiveRecord::Base
   # 
   def reserve
     gateway = "lib_gateway/#{self.controller}".camelize.constantize
-    RAILS_ENV["development"] ? 500000 : gateway.get_balance(self)
+    RAILS_ENV["production"] ? gateway.get_balance(self) : 50000
   end
 end

@@ -54,18 +54,9 @@ describe Claim do
                               :summa => 500)        
       @claim.fill!
     end
-    it "должен посчитать процент забираемый платежной системой (источник)" do 
-      @claim.fee.should == 4.5
-    end
-    it "должен посчитать процент который забирет себе сервис" do 
-      @claim.service_fee.should == 16
-    end
-    it "должен посчитать сумму к выдачи в исходной валюте" do 
-      @claim.receivable_source.should == 479.5
-
-    end
+    
     it "должен посчитать сумму к выдачи в новой валюте" do 
-      @claim.receivable_receive.should == (479.5 * 0.035).round(2)
+      @claim.receivable_receive.should == (500 * 0.035).round(2)
     end
   end
 end
