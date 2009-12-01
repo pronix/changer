@@ -1,11 +1,11 @@
 <div class="payment_content">
 
   <div>
-    <h3>Обмен</h3>
+    <%= content_tag :h4, t('views.head') %>
     <%= render :partial => 'gateway/shared/info', :object => @claim %>      
   </div>
-  
-  <h3>Куда Вам отправить деньги</h3>
+
+  <%= content_tag :h3, t('views.to_send_money') %>
   <% semantic_form_for [:gateway, @claim], :url => gateway_paypal_path, :method => :put  do |form| %>
   <% form.inputs  do -%>
   <%= form.input :email %>
@@ -22,7 +22,7 @@
   <%= form.input :comment, :input_html => {:rows => 5 }  %>
   <% end -%>
   <% form.buttons do -%>
-  <%= form.commit_button  %>
+  <%= form.commit_button t('views.submit_continue') %>  
   <% end -%>
   <% end %>
 </div>

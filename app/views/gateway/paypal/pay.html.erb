@@ -1,9 +1,11 @@
-<div>
-<% form_for "pay", :url => @claim.payment_system_source.parameters[:url]  do -%>
-  <h4>Обмен валюты</h4>
-  <div><%= render :partial => 'gateway/shared/confirmed', :object => @claim %></div>
-  <%= hidden_field_tag "cmd", "_s-xclick" %>
-  <%= hidden_field_tag "encrypted", @encrypted_basic %>
-  <p><%= submit_tag "Оплатить" %></p>
-  <% end -%>
+<div class="middle_block">
+  <div class="payment_content">
+    <% form_for "pay", :url => @claim.payment_system_source.parameters[:url]  do -%>
+    <%= content_tag :h4, t('views.pay_head') %>
+    <div><%= render :partial => 'gateway/shared/confirmed', :object => @claim %></div>
+    <%= hidden_field_tag "cmd", "_s-xclick" %>
+    <%= hidden_field_tag "encrypted", @encrypted_basic %>
+    <p><%= submit_tag t('view.submit_pay') %></p>  
+    <% end -%>
+  </div>
 </div>

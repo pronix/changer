@@ -7,20 +7,10 @@
   
 <div>
   <em> Курс обмена </em>
-  <strong>1.0</strong> к <strong><%= confirmed.path_way.rate %></strong>
-  <div>
-    <em> Коммисия платежной системы источника: </em>
-    <%=number_to_percentage( confirmed.path_way.fee_payment_system, :precision => 2) %>
-  </div>
-  <div>
-    <em> Коммисия сервиса: </em>
-    <strong> <%= number_to_percentage(confirmed.path_way.fee, :precision => 2) %> </strong>
-  </div>
-  
+  <strong>1.0 <%= confirmed.currency_source.name %> </strong> =
+  <strong><%= confirmed.path_way.rate %> <%= confirmed.currency_receiver.name %></strong>
   <div>
     <div><em>Сумма обмена:</em><%= confirmed.summa %></div>
-    <div><em>Сумма коммисии Плат. ситсемы источника:</em><%= confirmed.fee %></div>
-    <div><em>Сумма коммисии сервиса:</em><%= confirmed.service_fee %></div>
     <div><em>Сумма к получению:</em><%= confirmed.receivable_receive %></div>
   </div>
 </div>

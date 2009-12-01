@@ -1,10 +1,9 @@
 <div class="payment_content">
   <div>
-    <%= content_tag :h4, t('views.webmoney.show.head') %>
+    <%= content_tag :h4, t('views.head') %>
     <%= render :partial => 'gateway/shared/info', :object => @claim %>      
   </div>
-  
-  <h3>Куда Вам отправить деньги</h3>
+  <%= content_tag :h3, t('views.to_send_money') %>
   <% semantic_form_for [:gateway, @claim], :url => gateway_webmoney_path, :method => :put  do |form| %>
   <% form.inputs  do -%>
   <%= form.input :email %>
@@ -21,7 +20,7 @@
   <%= form.input :comment, :input_html => {:rows => 5 }  %>
   <% end -%>
   <% form.buttons do -%>
-  <%= form.commit_button t('views.webmoney.show.submit') %>
+  <%= form.commit_button t('views.submit_continue') %>
   <% end -%>
   <% end %>
 </div>

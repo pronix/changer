@@ -9,6 +9,14 @@ ru:
   flash:
     new claim: Создана новая заявка
   views:
+    head: Обмен
+    pay_head: Обмен валюты
+    submit_pay: Оплатить
+    submit_continue: Продолжить
+    to_send_money: Куда Вам отправить деньги
+    confirmed_head: Данные обмена
+    confirmed_submit: Продолжить
+    confirmed_edit: Редактировать
     webmoney:
       show:
         head: Обмен

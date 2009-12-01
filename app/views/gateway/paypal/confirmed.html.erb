@@ -1,6 +1,6 @@
 <% semantic_form_for [:gateway, @claim], :url => confirmed_gateway_webmoney_path, :method => :post  do |form| %>
 <div class="data_claim">
-  <h3>Данные обмена</h3>
+  <%= content_tag :h4, t('views.confirmed_head') %>
   <div><%= render :partial => '/gateway/shared/confirmed', :object => @claim %></div>
   <hr />
   <div><em>Ваш аккаунт в PayPal:</em>
@@ -17,7 +17,7 @@
     <%= form.input :agree, :as => :boolean %>
   <% end -%>
   <% form.buttons do -%>
-    <%= form.commit_button "Продолжить" %>
-    <%= link_to "Редактировать", gateway_paypal_path %>
+    <%= form.commit_button t('views.confirmed_submit') %>
+    <%= link_to t('views.confirmed_edit'), gateway_paypal_path %>
   <% end -%>
 <% end -%>

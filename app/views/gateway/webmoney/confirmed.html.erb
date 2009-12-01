@@ -1,6 +1,6 @@
 <% semantic_form_for [:gateway, @claim], :url => confirmed_gateway_webmoney_path, :method => :post do |form| %>
 <div class="data_claim">
-  <%= content_tag :h4, t('views.webmoney.confirmed.head') %>
+  <%= content_tag :h4, t('views.confirmed_head') %>
   <div><%= render :partial => '/gateway/shared/confirmed', :object => @claim %></div>
   <hr />
   <div>
@@ -17,7 +17,7 @@
     <%= form.input :agree, :as => :boolean %>
   <% end -%>
   <% form.buttons do -%>
-    <%= form.commit_button t('views.webmoney.confirmed.submit') %>
-    <%= link_to t('views.webmoney.confirmed.edit'), gateway_webmoney_path %>    
+    <%= form.commit_button t('views.confirmed_submit') %>
+    <%= link_to t('views.confirmed_edit'), gateway_webmoney_path %>    
   <% end -%>
 <% end -%>
