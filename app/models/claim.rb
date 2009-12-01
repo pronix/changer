@@ -10,7 +10,7 @@ require "gateway/webmoney/webmoney"
 class Claim < ActiveRecord::Base
   include AASM
   attr_protected :receivable, :fee, :service_fee
-  attr_accessor :agree  
+  attr_accessor :agree   
   belongs_to :currency_source, :class_name => "Currency"
   belongs_to :currency_receiver, :class_name => "Currency" 
   belongs_to :path_way, :class_name => "PathWay"  
@@ -125,16 +125,23 @@ class Claim < ActiveRecord::Base
   aasm_event :erroneous  do 
     transitions :to => :error, :from => [:new_claim, :filled, :confirmed, :pay, :complete, :cancel]
   end
+  
   # проверяем хватит ли денег в обменеке
   def valid_reserv?
-    self.fee = (self.summa / 100.0)* self.path_way.fee_payment_system.to_f
-    self.service_fee = (self.summa / 100.0)* self.path_way.fee.to_f
-    self.receivable_source = self.summa - (self.fee + self.service_fee)
-    self.receivable_receive = (self.receivable_source * self.path_way.rate).round(2)
+    # self.fee = (self.summa / 100.0)* self.path_way.fee_payment_system.to_f
+    # self.service_fee = (self.summa / 100.0)* self.path_way.fee.to_f
+    # self.receivable_source = self.summa - (self.fee + self.service_fee)
+    # self.receivable_receive = (self.receivable_source * self.path_way.rate).round(2)
+    self.receivable_receive = (self.summa * self.path_way.rate).round(2)
     errors.add("reserve", "excess_reserve") if self.receivable_receive >= self.payment_system_receiver.reserve
     errors.blank?
   end
   # Вычисляем обмен валюты и отправляем что создана новая заявка
+  # TODO
+  # ни каких % комиссии высчитываться не будет
+  # Будут две суммы: начальная и конечная.
+  # Начальная - сумма которую пользователь перечислит на наш счет
+  # Конечная - сумма которую мы перечисли на счет пользователя
   def exchange
     # поля в таблице
     # summa - исходная сумма
@@ -144,10 +151,12 @@ class Claim < ActiveRecord::Base
     # receivable_receive - сумма к получение в конечной валюте
     # rate - курс, начальной валюты к конечной
 
-    self.fee = (self.summa / 100.0)* self.path_way.fee_payment_system.to_f
-    self.service_fee = (self.summa / 100.0)* self.path_way.fee.to_f
-    self.receivable_source = self.summa - (self.fee + self.service_fee)
-    self.receivable_receive = (self.receivable_source * self.path_way.rate).round(2)
+    # self.fee = (self.summa / 100.0)* self.path_way.fee_payment_system.to_f
+    # self.service_fee = (self.summa / 100.0)* self.path_way.fee.to_f
+    # self.receivable_source = self.summa - (self.fee + self.service_fee)
+    # self.receivable_receive = (self.receivable_source * self.path_way.rate).round(2)
+    
+    self.receivable_receive = (self.summa * self.path_way.rate).round(2)
     Notifier.send_later(:deliver_new_claim, self)            
   end
   
