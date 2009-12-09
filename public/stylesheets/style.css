@@ -228,3 +228,20 @@ clear:both;
 font-weight:bold;
 font-size:16px;
 }
+/* @group Success, notice and error boxes */
+/* copy from typus */
+.flash_error, .flash_notice, .flash_success { 
+  opacity: 0.7;
+  border: 1px solid #CCC;
+  font-weight: bold;
+  margin: 0 0 1em 0; }
+
+.flash_error p, .flash_notice p, .flash_success p { font-weight: bold; margin: 0!important; padding: 1em; }
+.flash_error { background: #FBE3E4; border-color: #FBC2C4; color: #8A1F11; }
+.flash_error a { color: #8A1F11; }
+.flash_notice { background: #FFF6BF; border-color: #FFD324; color: #514721; }
+.flash_notice a { color: #514721; }
+.flash_success { background: #E6EFC2; border-color: #C6D880; color: #264409; }
+.flash_success a { color: #264409; }
+
+/* @end */
