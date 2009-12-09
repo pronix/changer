@@ -1,26 +1,72 @@
-<%= content_tag :h1, t('views.claim.index.head') %>
-<div id="description">
-  Описание сервиса
+<div class="description">
+  Пожалуйста, выберите какие электронные деньги выхотите поменять и на какие, и вам будет показано какой курс и сколько в запасе.
 </div>
 
-<div style="border:.07em solid gray; width: 50%;">
-  <% form_for :claim, :url => claims_path, :id => "new_claim" do |form| -%>
-  <div >
-    <div>
-    <%= content_tag :em, t('views.claim.index.change') %>:
-    <%= collection_select(:claim, :currency_source_id, Currency.all, :id, :name ) %>
+  <% form_for :claim, :url => claims_path,
+  :html =>  { :id => "new_claim", :class => "exchange"} do |form| -%>
+  <label class="header">Выберите валюту для обмена:</label>
+
+    <div class="fl_l">
+      <%= content_tag :label, t('views.claim.index.change') %>
+      <%= collection_select(:claim, :currency_source_id, @currency, :id, :name ) %>
+      <%= content_tag :label, t('views.claim.index.on_change') %>
+      <%= select  "claim", "currency_receiver_id",
+         @to_currency.collect { |x| 
+          %(<option value="#{html_escape(x[1].to_s)}" data_rate="#{html_escape(x.last.to_s)}">#{html_escape(x.first.to_s)}</option>)
+          }.join("\n") %>
+
+
+      <%= label_tag 'claim_summa', t('views.claim.index.summa') %>
+      <%= form.text_field :summa, :size => 12  %>
+      <label class="equivalent">=</label>
     </div>
+
+
+  <div class="fl_r">
     <div>
-    <%= content_tag :em, t('views.claim.index.on_change') %>:      
-    <%= collection_select(:claim, :currency_receiver_id, Currency.all, :id, :name) %>
+      <label class="kurs">Курс: Резерв:</label>
+			<label id="currency_rate">1.00 <%= @currency.first.name %> = <%=  @to_currency.first.last.to_s %></label>
+			<label id="reserve"><%= @reserv %> <%= @currency.first.name %></label>
     </div>
-    <%= content_tag :div, "", :id => "currency_rate" %>
-    <%= content_tag :em, t('views.claim.index.summa') %>:            
-    <%= form.text_field :summa, :size => 12  %>
+	  <input name="input2" type="text" value="" class="res" />
+    <%= submit_tag t('views.claim.index.submit'), :class=>"exchange" %>
   </div>
-  <%= submit_tag t('views.claim.index.submit') %>
   <% end -%>
+
+<div class="buttons">
+				<a href="#" class="button"><img src="images/butt1.gif" alt="button" /></a>
+				<a href="#" class="button"><img src="images/butt2.gif" alt="button" /></a>
+				<a href="#" class="button"><img src="images/butt3.gif" alt="button" /></a>
+				<a href="#" class="button"><img src="images/butt1.gif" alt="button" /></a>
+				<a href="#" class="button"><img src="images/butt2.gif" alt="button" /></a>
+				<a href="#" class="button"><img src="images/butt3.gif" alt="button" /></a>
+				<a href="#" class="button"><img src="images/butt1.gif" alt="button" /></a>
+				<a href="#" class="button"><img src="images/butt2.gif" alt="button" /></a>
+			</div>
+    <div class="information">
+      <h2>Информация</h2>
+      <p>
+			В своей работе мы стремимся достигнуть наибольшего результата для нашего доверителя. Наши специалисты собираются «за круглым столом» для разработки той или иной схемы, для выбора стратегии и тактики защиты интересов бизнесменов, результатом всегда является оригинальное решение. Мы накапливали опыт, разрабатывали методики применения права для решения конкретных практических задач, собирали лучших специалистов, которые сегодня составляют команду единомышленников. 
+      </p>
+		  <p>
+ Таким образом, став клиентом нашего Адвокатского образования вы найдете сильного и опытного юридического защитника для вашего бизнеса, стратегического партнера для развития бизнеса и просто людей, с которыми хорошо и приятно работать.
+		  </p>
+    </div>
+    <div class="reserve">
+      <h2>Резервы</h2>
+      <p>Webmoney WMZ <span>3895.05</span></p>
+      <p>Webmoney WMR <span>78595.02</span></p>
+      <p>Webmoney WMU <span>6895.01</span></p>
+      <p>Webmoney WME <span>4563895.07</span></p>
+      <p>ПРиват24 гр.	<span>&gt;10000</span></p>
+      <p>ПРиват24 USD <span>&gt;10000</span></p>
+      <p class="procent">На вашем кошельке должно быть +0.8%</p>
+    </div>
 </div>
+  
+
+
+
 
 <% content_for :js do -%>
 <script type="text/javascript" charset="utf-8">
@@ -28,20 +74,38 @@
     $("#claim_currency_source_id").change(function(){
         $("#claim_currency_receiver_id").
          load("<%= path_ways_path(:currency => :id, :format => :js) %>".replace("id", $(this).val() ), "", function(){
-            $("#currency_rate").text("Курс обмена: 1 "+
-              $("#claim_currency_source_id>option:selected").text()+" к "+
+            $("#claim_summa, input[name='input2']").val('0.0');
+             var data_rate = $("#claim_currency_receiver_id>option:first").attr('data_rate');
+             if (!!data_rate){
+            $("#currency_rate").text("1.0 " +
+              $("#claim_currency_source_id>option:selected").text()+" = "+
               $("#claim_currency_receiver_id>option:first").attr('data_rate') + " " +
               $("#claim_currency_receiver_id>option:selected").text());
+              }  
             })
       });
 
   $("#claim_currency_receiver_id").change(function(){
+    $("#claim_summa, input[name='input2']").val('0.0');
     var v = $(this).find("option:selected").attr('data_rate');
-    $("#currency_rate").text("Курс обмена: 1 "+
-    $("#claim_currency_source_id>option:selected").text()+" к "+ v + " " +
-    $("#claim_currency_receiver_id>option:selected").text());
+    if (!!v){
+      $("#currency_rate").text("1.0 " +
+      $("#claim_currency_source_id>option:selected").text()+" = "+ v + " " +
+      $("#claim_currency_receiver_id>option:selected").text());
+    }
   });
-  
+
+  /* расчет сумм */
+  $("#claim_summa").change(function(){
+    var rate = parseFloat($("#claim_currency_receiver_id").find("option:selected").attr("data_rate"));
+     if (rate)  { $("input[name='input2']").val((rate*$(this).val()).toFixed(2)); };
+   });
+
+  $("input[name='input2']").change(function(){
+     var rate = parseFloat($("#claim_currency_receiver_id").find("option:selected").attr("data_rate"));
+     if (rate)  {  $("#claim_summa").val(((1/rate)* $(this).val()).toFixed(2));  };
+   });
+
   });
 </script>
 <% end -%>
