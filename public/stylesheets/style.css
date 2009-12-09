@@ -1,0 +1,230 @@
+* { 
+margin:0; 
+padding:0;
+}
+html { 
+/*font-size:100.01%;*/
+height:100%; 
+background:url(../images/bg_blue.gif) #65a6ac;
+}
+body { 
+height:100%;  
+background:url(../images/bg.gif) #65a6ac top left repeat-x;
+/*font:.75em Arial;*/
+font:12px Arial;
+color:#1c1c1c;
+min-height:867px;
+}
+h1{
+font-size:18px;
+}
+h2{
+font-size:16px;
+padding:0 0 7px 0;
+color:#033c47;
+}
+h3{
+font-size:14px;
+}
+img {
+border:none;
+}
+.main {
+width:914px;
+margin:0 auto;
+padding-bottom:20px;
+}
+ul.top_menu {
+list-style:none;
+text-align:center;
+padding:57px 0 15px 170px;
+}
+ul.top_menu li {
+list-style:none;
+display:inline;
+margin-left:90px;
+}
+ul.top_menu li a {
+color:#02495f;
+font-size:18px;
+font-weight:bold;
+text-decoration:none;
+}
+.logo {
+background: url(../images/logo.gif) left top  no-repeat;
+width:914px;
+height:97px;
+}
+.content { 
+overflow:hidden;
+height:auto;
+height:1% !important;
+background:#ecefe8;
+padding:18px;
+}
+h1.name, div.description {
+color:#123845;
+font-size:18px;
+font-weight:normal;
+padding:0;
+text-align:center;
+}
+form.exchange {
+background: url(../images/money_form.jpg) left top  no-repeat;
+margin:27px -10px 0 -10px;
+height:118px;
+font-size:16px;
+padding:10px;
+font-weight:bold;
+}
+form.exchange label {
+float:left;
+width:225px;
+text-align:right;
+padding:0 20px 0 0;
+}
+form.exchange input {
+float:left;
+width:150px;
+height:20px;
+border:1px solid #645e50;
+margin-bottom:9px;
+}
+form.exchange select {
+float:left;
+width:152px;
+border:1px solid #645e50;
+margin-bottom:9px;
+height:20px;
+}
+form.exchange label.header {
+font-size:18px;
+text-align:center;
+padding-bottom:10px;
+display:block;
+float:none;
+width:100%;
+color:#033c47;
+}
+form.exchange label.kurs {
+font-size:14px;
+line-height:20px;
+font-weight:normal;
+}
+form.exchange label.equivalent {
+font-size:28px;
+line-height:20px;
+}
+
+form.exchange label.equivalent {
+padding-top:60px;
+float:left;
+width:34px;
+padding:0 0 0 20px;
+}
+form.exchange div.fl_l {
+width:480px;
+float:left;
+}
+form.exchange div.fl_r {
+width:389px;
+float:right;
+text-align:left;
+}
+form.exchange div.fl_r label{
+padding:0;
+width:266px;
+text-align:left;
+}
+form.exchange div.fl_r label.kurs{
+width:82px;
+
+}
+form.exchange div.fl_r input.res{
+margin:18px 0 0 0;
+clear:left;
+}
+form.exchange div.fl_r input.exchange{
+margin:18px 0 0 53px;
+background: url(../images/exchange.gif) left top  no-repeat;
+width:73px;
+height:22px;
+border:none;
+}
+div.buttons {
+width:411px;
+padding:55px 0 20px 46px;
+float:left;
+}
+div.buttons a {
+margin:0 3px;
+}
+div.buttons a img {
+border:1px solid #c0c0c0
+}
+
+.reserve {
+background: url(../images/money1.jpg) left bottom  no-repeat;
+width:411px;
+min-height:260px;
+float:left;
+margin:0 0 0 15px;
+padding:0 16px 50px 16px;
+overflow:hidden;
+font-size:16px;
+clear:left;
+}
+.reserve a.button {
+margin:0 5px;
+}
+.reserve h2{
+text-align:center;
+font-size:18px;
+font-weight:bold;
+margin:20px 0;
+}
+.reserve p{
+margin:5px 0;
+font-size:16px;
+text-align:center;
+font-weight:bold;
+}
+.reserve p span{
+padding-left:20px;
+}
+.reserve p.procent{
+padding-top:20px;
+}
+.information {
+background: url(../images/money2.jpg) left top  no-repeat;
+width:349px;
+min-height:412px;
+float:right;
+text-align:center;
+padding:0 16px 16px 16px;
+margin:30px 0 0 0;
+font-size:14px;
+text-align:center;
+font-weight:bold;
+
+}
+.information p{
+margin-bottom:18px;
+font-size:14px;
+text-align:center;
+}
+.information h2{
+text-align:center;
+font-size:18px;
+font-weight:bold;
+margin:20px 0;
+}
+
+#footer {
+background: url(../images/footer.gif) left bottom  repeat-x #ecefe8;
+height:35px;
+text-align:center;
+clear:both;
+font-weight:bold;
+font-size:16px;
+}
