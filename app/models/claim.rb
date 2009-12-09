@@ -30,7 +30,7 @@ class Claim < ActiveRecord::Base
   validates_presence_of :email, :if => lambda{ |t| !t.new_record?  }
   validates_format_of :email, :with => /\A[A-Z0-9_\.%\+\-]+@(?:[A-Z0-9\-]+\.)+(?:[A-Z]{2,4}|museum|travel)\z/i ,
   :if => lambda{ |t| !t.new_record? }
-  validates_numericality_of :summa
+  validates_numericality_of :summa, :greater_than  => 0
   
   validates_acceptance_of :agree, :if => lambda{ |t| t.filled? }
   
@@ -168,6 +168,7 @@ class Claim < ActiveRecord::Base
   
   # Выполняем перевод денего в новую платежныю систему пользователя
   def transfert
+    require "lib/gateway/#{self.payment_system_receiver.controller}/#{self.payment_system_receiver.controller}"    
     gateway = "lib_gateway/#{self.payment_system_receiver.controller}".camelize.constantize.new
     if gateway.transfert(self)
       self.completed!      

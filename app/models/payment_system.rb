@@ -13,6 +13,7 @@ class PaymentSystem < ActiveRecord::Base
   # резерв платежной системы (баланс сервиса на этой плат. системе)
   # 
   def reserve
+    require "lib/gateway/#{self.controller}/#{self.controller}"
     gateway = "lib_gateway/#{self.controller}".camelize.constantize
     RAILS_ENV["production"] ? gateway.get_balance(self) : 50000
   end
