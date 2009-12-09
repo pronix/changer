@@ -1,7 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
 
   map.root :controller => :claims, :action => :index
-  map.resource :claims, :only => [:new, :create, :show, :index],  :collection => { :show => :any }
+  map.resource :claims, :only => [:new, :create, :index]
   map.resource :path_ways, :only => [:show]
   
   map.namespace :gateway  do |gateway|
