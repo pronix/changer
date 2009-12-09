@@ -9,12 +9,11 @@ module ApplicationHelper
   end
   
   def css
-    @css_prefix = SystemSetting.css.setting rescue nil
+    @style = SystemSetting.css.setting rescue nil
     stylesheet_link_tag(
                         [
-                         %w{application}.map { |v| "#{@css_prefix[:css_prefix]}#{v}" },
-                         "formtastic", "formtastic_changes"
-                        ].flatten, :cache => true )
+                         @style[:css].try(:split), "formtastic", "formtastic_changes"
+                        ].flatten.compact, :cache => true )
   end
   
   def meta_to_html
