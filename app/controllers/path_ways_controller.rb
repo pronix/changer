@@ -3,8 +3,10 @@
 =end
 class PathWaysController < ApplicationController
   def show
+    
     unless params[:currency].blank?
       @currency = PathWay.get_currency_for_source(params[:currency]).collect{ |x| [x.currency_receiver.name, x.currency_receiver.id, x.rate] }
+      @reserv = Currency.find(params[:currency]).payment_system.reserve rescue 0
     else
       @currency = [] 
     end

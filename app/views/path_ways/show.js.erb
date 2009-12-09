@@ -1,3 +1,8 @@
 <%= @currency.collect { |x| 
  %(<option value="#{html_escape(x[1].to_s)}" data_rate="#{html_escape(x.last.to_s)}">#{html_escape(x.first.to_s)}</option>)
  }.join("\n") %>
+<script type="text/javascript" charset="utf-8">
+  $(function(){
+    $("#reserve").text("<%= @reserv %> " + $("#claim_currency_source_id>option:selected").text());
+  });
+</script>
