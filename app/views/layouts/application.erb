@@ -8,8 +8,29 @@
 </head>
 <body>
   <%= display_flash_message %>
-  <div id="main">
-    <%= yield %>
+  <div class="main">
+    <div class="logo">
+		  <ul class="top_menu"> 
+				<li>
+          <%= link_to t("views.main_page"), root_url %>
+				</li> 
+				<li>
+          <%= link_to t("views.about_page"), root_url %>
+				</li> 
+				<li>
+          <%= link_to t("views.contact_page"), root_url %>
+				</li> 
+		  </ul>
+	  </div>
+    <div class="content">
+      <h1 class="name">Здравствуйте, багодарим вас за выбор нашего обменника.</h1>
+      <%= yield %>
+    </div>
+    <div id="footer">
+		  <p class="copyright">
+			  &copy; 2009 somedomain.com
+		  </p>
+    </div>
   </div>
   
   <%= javascript_include_tag "jquery", :cache => true %>
