@@ -16,6 +16,12 @@ class Currency < ActiveRecord::Base
                     currency_receiver_id = (#{ self.id })
   }
   
+  # Только те валюты по которым возможен обмен, т.е. есть путь обмена
+  named_scope :be_exchanged, lambda{ 
+    ids = PathWay.all(:select => "distinct currency_source_id").map {|x| x.currency_source_id }
+    return [] if ids.blank?
+    { :conditions => { :id => ids }}
+  }
   
   def parameters(field=nil)
     if field.blank?
