@@ -8,7 +8,10 @@ class Gateway::WebmoneyController < ApplicationController
   before_filter :parse_payment_params, :only => [:payment_result, :payment_success, :payment_fail]
   before_filter :valid_payment, :only => [:payment_result]
   
+  # ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   # Заполнение данных для заявки
+  # ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  
   # выводим форму чтоб пользователь заполнил сумму и кошелек
   def show
     @claim.edit! if @claim.filled?    
@@ -49,7 +52,9 @@ class Gateway::WebmoneyController < ApplicationController
   end
   
   
+  # ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   # Оплата заявки через webmoney
+  # ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   
   def pay
   end

@@ -7,7 +7,10 @@ class Gateway::PaypalController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => [:done, :notify]  
   before_filter :fetch_claim, :only => [:show, :update, :confirmed, :pay ]  
 
+  # ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   # Заполнение данных по заявки
+  # ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  
   def show
     @claim.edit! if @claim.filled?    
   end
@@ -45,8 +48,10 @@ class Gateway::PaypalController < ApplicationController
     end    
   end
   
-  
+  # ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   # ========================= Оплата по системе PayPal ===========
+  # ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  
   # После потдверждения введеных данных и принятия пользовательского соглашения
   # Перенаправляем на оплату платежа
   def pay
