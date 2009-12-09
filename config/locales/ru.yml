@@ -17,6 +17,9 @@ ru:
     confirmed_head: Данные обмена
     confirmed_submit: Продолжить
     confirmed_edit: Редактировать
+    main_page: "Главная"
+    about_page: "О сервисе"
+    contact_page: "Контакты"
     webmoney:
       show:
         head: Обмен
@@ -33,10 +36,10 @@ ru:
     claim:
       index:
         head: Универсальная система обмена интернет валют
-        change: Меняем
-        on_change: на
-        summa: Сумма
-        submit: Продолжить
+        change: 'Я отдаю:'
+        on_change: 'Я получаю:'
+        summa: 'Количество:'
+        submit: ''
 
       your claim: Ваша заявка
       claim number: Номер заявки
@@ -58,11 +61,21 @@ ru:
             reserve:
               excess_reserve: В обменном пункте недостаточно средств для выполнения данной операции
     models:
-      claim: Заявка на обмен
-      path_way: Способ обмена
-      currency: Валюта
-      payment_system: Платежные системы
-      event: События
+      claim:
+        one: Заявка на обмен
+        other: Заявка на обмен
+      path_way:
+        one: Способ обмена
+        other: Способ обмена
+      currency:
+        one: Валюта
+        one: Список валют
+      payment_system:
+        one: Платежные системы
+        other: Платежные системы
+      event:
+        one: События
+        other: События
     attributes: 
       claim:
         path_way: Способ обмена

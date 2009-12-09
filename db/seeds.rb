@@ -8,13 +8,13 @@ SystemSetting.create([
                         :setting => {:words => ["paypal","webmoney","money_bookers"] } 
                       },
                       { :code => "css", :name => "Css", 
-                        :setting => {:css_prefix => "ver_1_" } 
+                        :setting => {:css => "style" } 
                       },
                       
                        ])
 PaymentSystem.create([ { 
                          :controller => "webmoney",
-                         :name => "Webmoney", 
+                         :name => "WebmoneyWMR", 
                          :parameters =>
                          {
                            :secret=>"[bnhjevysqblfkmuj",
@@ -22,7 +22,18 @@ PaymentSystem.create([ {
                            :wmid => 329080303191,
                            :url => "https://merchant.webmoney.ru/lmi/payment.asp"
                          },
-                         :description => "Платежная система webmoney"
+                         :description => "Платежная система webmoney WMR"
+                      }, { 
+                         :controller => "webmoney",
+                         :name => "WebmoneyWMZ", 
+                         :parameters =>
+                         {
+                           :secret=>"[bnhjevysqblfkmuj",
+                           :payee_purse=>"Z351277807459",
+                           :wmid => 329080303191,
+                           :url => "https://merchant.webmoney.ru/lmi/payment.asp"
+                         },
+                         :description => "Платежная система webmoney WMZ"
                       }, { 
                          :controller => "paypal",
                          :name => "PayPal",
@@ -40,16 +51,19 @@ PaymentSystem.create([ {
                          }
                       } ] )
 
-webmoney = PaymentSystem.find_by_name "Webmoney"
+webmoney_wmr = PaymentSystem.find_by_name "WebmoneyWMR"
+webmoney_wmz = PaymentSystem.find_by_name "WebmoneyWMZ"
 paypal = PaymentSystem.find_by_name "PayPal"
 
-webmoney.currencies.create([ {
-                               :name => "WMZ", :code => "WMZ",
-                               :description => "$"
-                             }, { 
-                               :name => "WMR", :code => "WMR",
-                               :description => "Руб."
-                             } ])
+webmoney_wmr.currencies.create([{ 
+                                  :name => "WMR", :code => "WMR",
+                                  :description => "Руб."
+                                } ])
+webmoney_wmz.currencies.create([ {
+                                   :name => "WMZ", :code => "WMZ",
+                                   :description => "$"
+                                 } ])
+
 paypal.currencies.create([
                           {     
                             :name => "PayPal USD", :code => "USD",
@@ -57,8 +71,8 @@ paypal.currencies.create([
                           } ])
 
 
-wmz = webmoney.currencies.find_by_code "WMZ"
-wmr = webmoney.currencies.find_by_code "WMR"
+wmz = webmoney_wmz.currencies.find_by_code "WMZ"
+wmr = webmoney_wmr.currencies.find_by_code "WMR"
 
 pl_usd = paypal.currencies.find_by_code "USD"
 
